@@ -10,6 +10,11 @@ type App struct {
 	ctx context.Context
 }
 
+type LoginResponse struct {
+	Message string
+	Result  bool
+}
+
 // NewApp creates a new App application struct
 func NewApp() *App {
 	return &App{}
@@ -24,4 +29,9 @@ func (a *App) startup(ctx context.Context) {
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
+}
+
+func (a *App) Login(username string, password string) LoginResponse {
+	success := username == "admin" && password == "password"
+	return LoginResponse{Message: fmt.Sprintf("Welcome %s!", username), Result: success}
 }

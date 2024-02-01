@@ -1,4 +1,4 @@
-module changeme
+module open-gsa
 
 go 1.18
 
