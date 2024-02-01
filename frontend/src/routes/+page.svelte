@@ -18,11 +18,17 @@
     }
 </script>
 
+<svelte:head>
+    <title>System Login</title>
+</svelte:head>
+
 <main>
-    <div class="login-wrap">
-        <img alt="App Logo" id="logo" src="{logo}">
-        <div class="result" class:failed-login={wasFailed} id="result">
-            {message}
+    <div class="container">
+        <div class="login-wrap">
+            <img alt="App Logo" id="logo" class="img-fluid" src="{logo}">
+            <div class="result" class:text-danger={wasFailed} id="result">
+                {message}
+            </div>
         </div>
     </div>
     <LoginForm on:success={handleSuccess}></LoginForm>
@@ -43,17 +49,13 @@
         background-repeat: no-repeat;
         background-size: 100% 100%;
         background-origin: content-box;
-        max-width: 160px;
+        max-width: 220px;
     }
 
     .result {
         height: 20px;
         line-height: 20px;
         margin: 1.5rem auto;
-
-        &.failed-login {
-            color: #ff3e00;
-        }
     }
 
 </style>
