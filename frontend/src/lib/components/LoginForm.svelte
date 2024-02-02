@@ -1,11 +1,11 @@
 <script lang="ts">
-    import {Login} from '../wailsjs/go/main/App.js'
+    import {Login} from "$lib/wailsjs/go/main/App";
     import {createEventDispatcher} from "svelte";
 
     const dispatch = createEventDispatcher();
 
-    let username: string
-    let password: string
+    let username: string = 'admin'
+    let password: string = 'password'
     let isProcessing: boolean = false
     let isSuccess: boolean = false
 

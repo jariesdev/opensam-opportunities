@@ -14,7 +14,7 @@
         }
 
         wasFailed = false
-        window.location.href = '/about'
+        window.location.href = '/opportunities'
     }
 </script>
 

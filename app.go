@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"open-gsa/internal/api/opportunities"
 )
 
 // App struct
@@ -34,4 +35,10 @@ func (a *App) Greet(name string) string {
 func (a *App) Login(username string, password string) LoginResponse {
 	success := username == "admin" && password == "password"
 	return LoginResponse{Message: fmt.Sprintf("Welcome %s!", username), Result: success}
+}
+
+func (a *App) SearchOpportunities(dateFrom string, dateTo string) *opportunities.SearchResult {
+	result := opportunities.GetOpportunities2(dateFrom, dateTo)
+	fmt.Print(result)
+	return result
 }

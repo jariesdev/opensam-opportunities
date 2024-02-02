@@ -39,6 +39,8 @@
 		align-items: center;
 		padding: 12px;
 		color: #999;
+		font-style: italic;
+		font-size: 12px;
 	}
 
 	@media (min-width: 480px) {
