@@ -21,10 +21,19 @@
             </tr>
             </thead>
             <tbody>
+            {#if items.length === 0}
+                <tr>
+                    <td colspan="{headers.length}">
+                        <p class="text-muted small text-center fst-italic">
+                            No records yet.
+                        </p>
+                    </td>
+                </tr>
+                {/if}
             {#each items as row}
                 <tr>
                     {#each headers as header, i}
-                        <th scope={i === 0 ? 'row' : 'col'}>{getColValue(header, row)}</th>
+                        <td scope={i === 0 ? 'row' : 'col'}>{getColValue(header, row)}</td>
                     {/each}
                 </tr>
             {/each}

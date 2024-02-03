@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -90,6 +91,16 @@ func getJson(url string, target interface{}) error {
 	return json.NewDecoder(r.Body).Decode(target)
 }
 
+//func getTestResponse() SearchResult {
+//	file, _ := ioutil.ReadFile("./sample-response.json")
+//
+//	data := SearchResult{}
+//
+//	_ = json.Unmarshal([]byte(file), &data)
+//
+//	return data
+//}
+
 //func GetOpportunities() {
 //	url := "https://api.sam.gov/prod/opportunities/v2/search?api_key={{apiKey}}&limit=15&postedFrom=12/01/2023&postedTo=12/07/2023"
 //	resp, err := http.Get(url)
@@ -105,35 +116,57 @@ func getJson(url string, target interface{}) error {
 //	fmt.Print(body)
 //}
 
-func GetOpportunities2(dateFrom string, dateTo string) *SearchResult {
-	var url string
-	result := &SearchResult{}
+func GetOpportunities(dateFrom string, dateTo string) SearchResult {
+	return exampleResponse()
+
+	/*var url string
+	result := SearchResult{}
 	//apiKey := "PqJ4mFnwiHJwoIUEgKVrmI1Mw2d2yENklw6UJues"
-	apiKey := getApiKey()
-	limit := 15
-	url = fmt.Sprintf(getBaseUrl()+"/opportunities/v2/search?api_key=%s&limit=%d", apiKey, limit)
+	//apiKey := getApiKey()
+	//limit := 15
+	//url = fmt.Sprintf(getBaseUrl()+"/opportunities/v2/search?api_key=%s&limit=%d", apiKey, limit)
+	url = getBaseUrl() + "/opportunities/v2/search?limit=1000"
 	if dateFrom != "" {
 		url += "&postedFrom=" + dateFrom
 	}
 	if dateTo != "" {
 		url += "&postedTo=" + dateTo
 	}
-	//url = "https://api.sam.gov/prod/opportunities/v2/search?api_key={{apiKey}}&limit=15&postedFrom=12/01/2023&postedTo=12/07/2023"
+	//url = "https://api.sam.gov/prod/opportunities/v2/search?api_key={{apiKey}}&limit=1000&postedFrom=12/01/2023&postedTo=12/07/2023"
 	err := getJson(url, result)
 	if err != nil {
-		return nil
+		log.Fatal(err)
 	}
 
-	println(result)
-
-	return result
+	return result*/
 }
 
 func getBaseUrl() string {
 	//envFile, _ := godotenv.Read(".env")
-	return "https://api-alpha.sam.gov"
+	return "https://dc2a6aef-9eb5-4142-9efc-100d28de688c.mock.pstmn.io"
+	//return "https://api-alpha.sam.gov"
 }
 func getApiKey() string {
 	//envFile, _ := godotenv.Read(".env")
 	return "3XASl0fa2aW5gvsMZQdbgqNDp3QPEJ8XnSsPmEFA"
+}
+
+func exampleResponse() SearchResult {
+	// read file
+	data, err := os.ReadFile("./internal/api/opportunities/sample-response.json")
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	// json data
+	var obj SearchResult
+
+	// unmarshall it
+	err = json.Unmarshal(data, &obj)
+	fmt.Print(obj)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	return obj
 }

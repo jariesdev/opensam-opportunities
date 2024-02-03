@@ -37,8 +37,7 @@ func (a *App) Login(username string, password string) LoginResponse {
 	return LoginResponse{Message: fmt.Sprintf("Welcome %s!", username), Result: success}
 }
 
-func (a *App) SearchOpportunities(dateFrom string, dateTo string) *opportunities.SearchResult {
-	result := opportunities.GetOpportunities2(dateFrom, dateTo)
-	fmt.Print(result)
+func (a *App) SearchOpportunities(dateFrom string, dateTo string) opportunities.SearchResult {
+	result := opportunities.GetOpportunities(dateFrom, dateTo)
 	return result
 }

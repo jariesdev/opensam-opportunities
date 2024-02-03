@@ -36,15 +36,13 @@
         }
     ]
 
-
-
-    function loadData (): void {
+    function loadData(): void {
         isLoading = true
         SearchOpportunities(from, to)
-            .then(({opportunitiesData}) => {
-                console.log(opportunitiesData)
-             items = opportunitiesData
-        })
+            .then((result) => {
+                const {opportunitiesData} = result
+                items = opportunitiesData || []
+            })
             .finally(() => {
                 isLoading = false
             })
