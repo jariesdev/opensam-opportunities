@@ -34,7 +34,7 @@ func PullLatest() string {
 	fmt.Printf("Daily Pull Count: %d", count)
 
 	from := now.Format("02/01/2006")
-	to := now.AddDate(0, -6, 0).Format("02/01/2006")
+	to := now.AddDate(0, -1, 0).Format("02/01/2006")
 	result := opportunities.GetOpportunities(from, to)
 
 	var opportunityItems []opportunities.OpportunityData
