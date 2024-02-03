@@ -15,8 +15,6 @@ type OpportunityFilter struct {
 }
 
 func PullLatest() string {
-	now := time.Now()
-
 	// only pull data once a day
 	count := 1
 	lastPull := database.Setting{}
@@ -33,8 +31,8 @@ func PullLatest() string {
 
 	fmt.Printf("Daily Pull Count: %d", count)
 
-	from := now.Format("02/01/2006")
-	to := now.AddDate(0, -1, 0).Format("02/01/2006")
+	from := time.Now().AddDate(0, -1, 0).Format("01/02/2006")
+	to := time.Now().Format("01/02/2006")
 	result := opportunities.GetOpportunities(from, to)
 
 	var opportunityItems []opportunities.OpportunityData
@@ -96,7 +94,7 @@ func Search(keyword string, filters OpportunityFilter) []database.Opportunity {
 		query.Where("DATE(posted_date) <= ?", filters.ToDate)
 	}
 
-	query.Find(&result)
+	query.Order("posted_date desc").Find(&result)
 
 	return result
 }

@@ -3,6 +3,7 @@ package opportunities
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -149,15 +150,15 @@ func getJson(url string, target interface{}) error {
 //}
 
 func GetOpportunities(dateFrom string, dateTo string) SearchResult {
-	return exampleResponse()
+	//return exampleResponse()
 
-	/*var url string
+	var url string
 	result := SearchResult{}
 	//apiKey := "PqJ4mFnwiHJwoIUEgKVrmI1Mw2d2yENklw6UJues"
-	//apiKey := getApiKey()
-	//limit := 15
-	//url = fmt.Sprintf(getBaseUrl()+"/opportunities/v2/search?api_key=%s&limit=%d", apiKey, limit)
-	url = getBaseUrl() + "/opportunities/v2/search?limit=1000"
+	apiKey := getApiKey()
+	limit := 1000
+	url = fmt.Sprintf(getBaseUrl()+"/opportunities/v2/search?api_key=%s&limit=%d", apiKey, limit)
+	//url = getBaseUrl() + "/opportunities/v2/search?limit=1000"
 	if dateFrom != "" {
 		url += "&postedFrom=" + dateFrom
 	}
@@ -165,29 +166,31 @@ func GetOpportunities(dateFrom string, dateTo string) SearchResult {
 		url += "&postedTo=" + dateTo
 	}
 	//url = "https://api.sam.gov/prod/opportunities/v2/search?api_key={{apiKey}}&limit=1000&postedFrom=12/01/2023&postedTo=12/07/2023"
-	err := getJson(url, result)
+	fmt.Printf("Request to URL: %s ", url)
+	//return SearchResult{}
+	err := getJson(url, &result)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return result*/
+	return result
 }
 
 func getBaseUrl() string {
 	//envFile, _ := godotenv.Read(".env")
-	return "https://dc2a6aef-9eb5-4142-9efc-100d28de688c.mock.pstmn.io"
-	//return "https://api-alpha.sam.gov"
+	return "https://api-alpha.sam.gov"
 }
 func getApiKey() string {
 	//envFile, _ := godotenv.Read(".env")
-	return "3XASl0fa2aW5gvsMZQdbgqNDp3QPEJ8XnSsPmEFA"
+	//return "3XASl0fa2aW5gvsMZQdbgqNDp3QPEJ8XnSsPmEFA"
+	return "8vZZYVauOCfEjrPbWlE6hgbUNvK9BLE1O5vm5axq"
 }
 
 func exampleResponse() SearchResult {
 	// read file
-	data, err := os.ReadFile("./internal/api/opportunities/sample-response.json")
+	data, err := os.ReadFile("./internal/api/opportunities/sample-response2.json")
 	if err != nil {
-		fmt.Print(err)
+		fmt.Println(err)
 	}
 
 	// json data

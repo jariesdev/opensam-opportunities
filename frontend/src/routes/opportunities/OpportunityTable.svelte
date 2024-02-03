@@ -74,9 +74,13 @@
 
     function pullLatest() {
         isPulling = true
-        PullLatest().finally(() => {
-            isPulling = false
-        })
+        PullLatest()
+            .then(() => {
+                loadData()
+            })
+            .finally(() => {
+                isPulling = false
+            })
     }
 
     function toggleFilter() {
