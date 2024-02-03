@@ -3,9 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	"open-gsa/internal/api/opportunities"
 	"open-gsa/internal/database"
-	"open-gsa/internal/repository"
+	opportunityRepo "open-gsa/internal/repository/opportunity"
 )
 
 // App struct
@@ -44,11 +43,11 @@ func (a *App) Login(username string, password string) LoginResponse {
 	return LoginResponse{Message: fmt.Sprintf("Welcome %s!", username), Result: success}
 }
 
-func (a *App) SearchOpportunities(dateFrom string, dateTo string) opportunities.SearchResult {
-	result := opportunities.GetOpportunities(dateFrom, dateTo)
+func (a *App) SearchOpportunities(keyword string, filters opportunityRepo.OpportunityFilter) []database.Opportunity {
+	result := opportunityRepo.Search(keyword, filters)
 	return result
 }
 
 func (a *App) PullLatest() {
-	repository.PullLatest()
+	opportunityRepo.PullLatest()
 }

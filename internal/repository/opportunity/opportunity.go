@@ -1,12 +1,18 @@
-package repository
+package opportunity
 
 import (
 	"fmt"
+	"github.com/gen2brain/beeep"
 	"open-gsa/internal/api/opportunities"
 	"open-gsa/internal/database"
 	"strconv"
 	"time"
 )
+
+type OpportunityFilter struct {
+	FromDate string
+	ToDate   string
+}
 
 func PullLatest() string {
 	now := time.Now()
@@ -40,9 +46,15 @@ func PullLatest() string {
 	// update daily count
 	db.Where(database.Setting{Key: "daily_pull_count"}).Updates(database.Setting{Value: strconv.Itoa(count + 1)})
 
+	err := beeep.Alert("OpenGsaApp", "Pulled latest opportunities.", "static/favicon.png")
+	if err != nil {
+		panic(err)
+	}
+
 	return fmt.Sprintf("Pulled %d items", len(opportunityItems))
 }
 
+// insert if not exists or update if exists based on notice ID
 func insertToDB(opportunityData []opportunities.OpportunityData) {
 	db := database.GetDbInstance()
 	db.FirstOrCreate(&database.Setting{Key: "last_pull", Value: time.Now().Format(time.DateTime)})
@@ -69,4 +81,22 @@ func insertToDB(opportunityData []opportunities.OpportunityData) {
 		}
 		db.Where(database.Opportunity{NoticeID: item.NoticeID}).Assign(row).FirstOrCreate(row)
 	}
+}
+
+func Search(keyword string, filters OpportunityFilter) []database.Opportunity {
+	var result []database.Opportunity
+	db := database.GetDbInstance()
+	// keywords
+	query := db.Where("notice_id LIKE ? OR title LIKE ? OR solicitation_number LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%")
+
+	if filters.FromDate != "" {
+		query.Where("DATE(posted_date) >= ?", filters.FromDate)
+	}
+	if filters.ToDate != "" {
+		query.Where("DATE(posted_date) <= ?", filters.ToDate)
+	}
+
+	query.Find(&result)
+
+	return result
 }

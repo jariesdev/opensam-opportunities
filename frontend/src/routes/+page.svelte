@@ -22,21 +22,20 @@
     <title>System Login</title>
 </svelte:head>
 
-<main>
-    <div class="container">
-        <div class="login-wrap">
-            <img alt="App Logo" id="logo" class="img-fluid" src="{logo}">
-            <div class="result" class:text-danger={wasFailed} id="result">
-                {message}
-            </div>
+<div class="container mt-5">
+    <div class="login-wrap mx-auto">
+        <img alt="App Logo" id="logo" class="img-fluid" src="{logo}">
+        <div class="result" class:text-danger={wasFailed} id="result">
+            {message}
         </div>
+        <LoginForm on:success={handleSuccess}></LoginForm>
     </div>
-    <LoginForm on:success={handleSuccess}></LoginForm>
-</main>
+</div>
 
 <style lang="postcss">
     .login-wrap {
         text-align: center;
+        max-width: 800px;
     }
 
     #logo {
