@@ -27,6 +27,12 @@ type Opportunity struct {
 	UILink             string
 }
 
+type User struct {
+	gorm.Model
+	Username string
+	Password string
+}
+
 type Setting struct {
 	gorm.Model
 	Key   string
@@ -34,13 +40,22 @@ type Setting struct {
 }
 
 func GetDbInstance() *gorm.DB {
-	db, _ := gorm.Open(sqlite.Open("database.db"))
+	db, _ := gorm.Open(sqlite.Open("database.sqlite"))
 
 	// Migrate the schema
-	err := db.AutoMigrate(&Opportunity{}, &Setting{})
+	err := db.AutoMigrate(&User{}, &Opportunity{}, &Setting{})
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	return db
+}
+
+func RunSeeder() {
+	db := GetDbInstance()
+	var count int64
+	db.Model(&User{}).Count(&count)
+	if count == 0 {
+		db.Create(&User{Username: "admin", Password: "password"})
+	}
 }

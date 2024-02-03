@@ -27,7 +27,6 @@ func PullLatest() string {
 
 	fmt.Printf("Daily Pull Count: %d", count)
 
-	fmt.Print(lastPull)
 	from := now.Format("MM/DD/YYYY")
 	to := now.Format("MM/DD/YYYY")
 	result := opportunities.GetOpportunities(from, to)

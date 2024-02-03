@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"open-gsa/internal/api/opportunities"
+	"open-gsa/internal/database"
 	"open-gsa/internal/repository"
 )
 
@@ -25,6 +26,7 @@ func NewApp() *App {
 // startup is called when the app starts. The context is saved
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
+	database.RunSeeder()
 	a.ctx = ctx
 }
 
@@ -34,7 +36,11 @@ func (a *App) Greet(name string) string {
 }
 
 func (a *App) Login(username string, password string) LoginResponse {
-	success := username == "admin" && password == "password"
+	db := database.GetDbInstance()
+	var user database.User
+	result := db.First(&user, "username = ? AND password = ?", username, password)
+	success := result.RowsAffected > 0
+
 	return LoginResponse{Message: fmt.Sprintf("Welcome %s!", username), Result: success}
 }
 
