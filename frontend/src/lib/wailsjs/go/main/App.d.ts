@@ -10,4 +10,4 @@ export function Login(arg1:string,arg2:string):Promise<main.LoginResponse>;
 
 export function PullLatest():Promise<void>;
 
-export function SearchOpportunities(arg1:string,arg2:opportunity.OpportunityFilter):Promise<Array<database.Opportunity>>;
+export function SearchOpportunities(arg1:string,arg2:opportunity.OpportunityFilter,arg3:boolean):Promise<Array<database.Opportunity>>;

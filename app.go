@@ -2,9 +2,14 @@ package main
 
 import (
 	"context"
+	"encoding/csv"
 	"fmt"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"log"
 	"open-gsa/internal/database"
 	opportunityRepo "open-gsa/internal/repository/opportunity"
+	"os"
+	"strings"
 )
 
 // App struct
@@ -43,11 +48,93 @@ func (a *App) Login(username string, password string) LoginResponse {
 	return LoginResponse{Message: fmt.Sprintf("Welcome %s!", username), Result: success}
 }
 
-func (a *App) SearchOpportunities(keyword string, filters opportunityRepo.OpportunityFilter) []database.Opportunity {
+func (a *App) SearchOpportunities(keyword string, filters opportunityRepo.OpportunityFilter, saveAs bool) []database.Opportunity {
 	result := opportunityRepo.Search(keyword, filters)
+
+	if saveAs {
+		var filters []runtime.FileFilter
+		fileFilters := append(filters, runtime.FileFilter{
+			DisplayName: "Comma-separate Values",
+			Pattern:     "*.csv",
+		})
+		selection, err := runtime.SaveFileDialog(a.ctx, runtime.SaveDialogOptions{
+			Title:                      "Save Report",
+			DefaultFilename:            "Opportunities",
+			Filters:                    fileFilters,
+			ShowHiddenFiles:            false,
+			CanCreateDirectories:       false,
+			TreatPackagesAsDirectories: false,
+		})
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("OpenFile: selection ", selection)
+		downloadReport(result, selection)
+	}
+
 	return result
 }
 
 func (a *App) PullLatest() {
 	opportunityRepo.PullLatest()
+}
+
+func downloadReport(data []database.Opportunity, filename string) {
+
+	if !strings.HasSuffix(filename, ".csv") {
+		filename = fmt.Sprintf("%s.csv", filename)
+	}
+
+	csvFile, err := os.Create(filename)
+
+	if err != nil {
+		log.Fatalf("failed creating file: %s", err)
+	}
+
+	csvwriter := csv.NewWriter(csvFile)
+
+	_ = csvwriter.Write([]string{
+		"NoticeID",
+		"Title",
+		"SolicitationNumber",
+		"FullParentPathName",
+		"FullParentPathCode",
+		"PostedDate",
+		"Type",
+		"BaseType",
+		"ArchiveType",
+		"ArchiveDate",
+		"ResponseDeadLine",
+		"NaicsCode",
+		"ClassificationCode",
+		"Active",
+		"Description",
+		"OrganizationType",
+		"UILink",
+	})
+
+	for _, op := range data {
+		_ = csvwriter.Write([]string{
+			op.NoticeID,
+			op.Title,
+			op.SolicitationNumber,
+			op.FullParentPathName,
+			op.FullParentPathCode,
+			op.PostedDate,
+			op.Type,
+			op.BaseType,
+			op.ArchiveType,
+			op.ArchiveDate,
+			op.ResponseDeadLine,
+			op.NaicsCode,
+			op.ClassificationCode,
+			op.Active,
+			op.Description,
+			op.OrganizationType,
+			op.UILink,
+		})
+	}
+	csvwriter.Flush()
+	csvFile.Close()
+
 }

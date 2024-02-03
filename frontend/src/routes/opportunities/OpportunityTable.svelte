@@ -6,6 +6,7 @@
     import Button from "$lib/components/button/Button.svelte";
     import Modal from "$lib/components/modal/Modal.svelte";
     import OpportunityDetails from "./OpportunityDetails.svelte";
+    import {downloadCsvFromArray} from "$lib/helpers/data-export";
 
     let items: any[] = []
     const from: string = '12/01/2023'
@@ -82,6 +83,18 @@
         showFilter = !showFilter
     }
 
+    function downloadAsCsv() {
+        // remove action field
+        // headers.pop()
+        // downloadCsvFromArray(items, headers, 'Export Report')
+        SearchOpportunities(search, filters, true)
+    }
+
+    function openUrl(url: string):null {
+        window.location = url
+        return null
+    }
+
     onMount(() => {
         loadData()
     })
@@ -120,19 +133,17 @@
         <div class="col-12 col-sm-auto flex-grow-0 mb-2 mb-sm-0">
             <Button loading={isPulling} on:click={pullLatest} class="text-nowrap w-100">Pull Opportunities</Button>
         </div>
+        <div class="col-12 col-sm-auto flex-grow-0 mb-2 mb-sm-0">
+            <Button on:click={downloadAsCsv} class="text-nowrap w-100">Export</Button>
+        </div>
     </div>
     <DataTable items={items} headers={headers} bind:loading={isLoading} let:row={row}>
-        <span slot="column" let:row={row} let:header={header} let:getColValue={getValue}>
-            {#if header.field === 'UILink'}
-                <a href="{row.UILink}" target="_blank" class="fst-italic">visit</a>
-            {:else}
-                {getValue(header, row)}
-            {/if}
-        </span>
         <div slot="actions" let:row={row}>
             <Modal title="{row.title}">
-                <div slot="activator" let:show={show}>
-                    <Button on:click={show} size="sm">Show</Button>
+                <div slot="activator" class="text-center text-nowrap" let:show={show}>
+                    <a href="" on:click|preventDefault={show} >
+                        <i class="fas fa-info-circle"></i>
+                    </a>
                 </div>
                 <div slot="body">
                     <OpportunityDetails opportunity="{row}"></OpportunityDetails>
