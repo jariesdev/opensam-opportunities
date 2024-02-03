@@ -17,61 +17,93 @@ type SearchResult struct {
 }
 
 type OpportunityData struct {
-	NoticeID                  string      `json:"noticeId"`
-	Title                     string      `json:"title"`
-	SolicitationNumber        string      `json:"solicitationNumber"`
-	FullParentPathName        string      `json:"fullParentPathName"`
-	FullParentPathCode        string      `json:"fullParentPathCode"`
-	PostedDate                string      `json:"postedDate"`
-	Type                      string      `json:"type"`
-	BaseType                  string      `json:"baseType"`
-	ArchiveType               string      `json:"archiveType"`
-	ArchiveDate               string      `json:"archiveDate"`
-	TypeOfSetAsideDescription interface{} `json:"typeOfSetAsideDescription"`
-	TypeOfSetAside            interface{} `json:"typeOfSetAside"`
-	ResponseDeadLine          string      `json:"responseDeadLine"`
-	NaicsCode                 string      `json:"naicsCode"`
-	NaicsCodes                []string    `json:"naicsCodes"`
-	ClassificationCode        string      `json:"classificationCode"`
-	Active                    string      `json:"active"`
-	Award                     interface{} `json:"award"`
-	PointOfContact            []struct {
-		Fax      interface{} `json:"fax"`
-		Type     string      `json:"type"`
-		Email    string      `json:"email"`
-		Phone    string      `json:"phone"`
-		Title    interface{} `json:"title"`
-		FullName string      `json:"fullName"`
-	} `json:"pointOfContact"`
-	Description      string `json:"description"`
-	OrganizationType string `json:"organizationType"`
-	OfficeAddress    struct {
-		Zipcode     string `json:"zipcode"`
-		City        string `json:"city"`
-		CountryCode string `json:"countryCode"`
-		State       string `json:"state"`
-	} `json:"officeAddress"`
-	PlaceOfPerformance struct {
-		City struct {
-			Code string `json:"code"`
-			Name string `json:"name"`
-		} `json:"city"`
-		State struct {
-			Code string `json:"code"`
-			Name string `json:"name"`
-		} `json:"state"`
-		Country struct {
-			Code string `json:"code"`
-			Name string `json:"name"`
-		} `json:"country"`
-	} `json:"placeOfPerformance"`
-	AdditionalInfoLink interface{} `json:"additionalInfoLink"`
-	UILink             string      `json:"uiLink"`
-	Links              []struct {
-		Rel  string `json:"rel"`
-		Href string `json:"href"`
-	} `json:"links"`
-	ResourceLinks []string `json:"resourceLinks"`
+	NoticeID                  string             `json:"noticeId"`
+	Title                     string             `json:"title"`
+	SolicitationNumber        string             `json:"solicitationNumber"`
+	FullParentPathName        string             `json:"fullParentPathName"`
+	FullParentPathCode        string             `json:"fullParentPathCode"`
+	PostedDate                string             `json:"postedDate"`
+	Type                      string             `json:"type"`
+	BaseType                  string             `json:"baseType"`
+	ArchiveType               string             `json:"archiveType"`
+	ArchiveDate               string             `json:"archiveDate"`
+	TypeOfSetAsideDescription string             `json:"typeOfSetAsideDescription"`
+	TypeOfSetAside            string             `json:"typeOfSetAside"`
+	ResponseDeadLine          string             `json:"responseDeadLine"`
+	NaicsCode                 string             `json:"naicsCode"`
+	NaicsCodes                []string           `json:"naicsCodes"`
+	ClassificationCode        string             `json:"classificationCode"`
+	Active                    string             `json:"active"`
+	Award                     Award              `json:"award"`
+	PointOfContact            []PointOfContact   `json:"pointOfContact"`
+	Description               string             `json:"description"`
+	OrganizationType          string             `json:"organizationType"`
+	OfficeAddress             OfficeAddress      `json:"officeAddress"`
+	PlaceOfPerformance        PlaceOfPerformance `json:"placeOfPerformance"`
+	AdditionalInfoLink        string             `json:"additionalInfoLink"`
+	UILink                    string             `json:"uiLink"`
+	Links                     []Link             `json:"links"`
+	ResourceLinks             []string           `json:"resourceLinks"`
+}
+
+type PlaceOfPerformance struct {
+	City struct {
+		Code string `json:"code"`
+		Name string `json:"name"`
+	} `json:"city"`
+	State struct {
+		Code string `json:"code"`
+		Name string `json:"name"`
+	} `json:"state"`
+	Country struct {
+		Code string `json:"code"`
+		Name string `json:"name"`
+	} `json:"country"`
+}
+
+type Link struct {
+	Rel  string `json:"rel"`
+	Href string `json:"href"`
+}
+
+type OfficeAddress struct {
+	Zipcode     string `json:"zipcode"`
+	City        string `json:"city"`
+	CountryCode string `json:"countryCode"`
+	State       string `json:"state"`
+}
+type PointOfContact struct {
+	Fax      interface{} `json:"fax"`
+	Type     string      `json:"type"`
+	Email    string      `json:"email"`
+	Phone    string      `json:"phone"`
+	Title    string      `json:"title"`
+	FullName string      `json:"fullName"`
+}
+
+type Award struct {
+	Date    string `json:"date"`
+	Number  string `json:"number"`
+	Amount  string `json:"amount"`
+	Awardee struct {
+		Name     string `json:"name"`
+		Location struct {
+			City struct {
+				Name string `json:"name"`
+			} `json:"city"`
+			State struct {
+				Code string `json:"code"`
+				Name string `json:"name"`
+			} `json:"state"`
+			Zip     string `json:"zip"`
+			Country struct {
+				Code string `json:"code"`
+				Name string `json:"name"`
+			} `json:"country"`
+		} `json:"location"`
+		UeiSAM   string `json:"ueiSAM"`
+		CageCode string `json:"cageCode"`
+	} `json:"awardee"`
 }
 
 type ResultLink struct {

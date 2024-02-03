@@ -8,23 +8,25 @@ import (
 
 type Opportunity struct {
 	gorm.Model
-	NoticeID           string
-	Title              string
-	SolicitationNumber string
-	FullParentPathName string
-	FullParentPathCode string
-	PostedDate         string
-	Type               string
-	BaseType           string
-	ArchiveType        string
-	ArchiveDate        string
-	ResponseDeadLine   string
-	NaicsCode          string
-	ClassificationCode string
-	Active             string
-	Description        string
-	OrganizationType   string
-	UILink             string
+	NoticeID                  string `json:"noticeID,omitempty"`
+	Title                     string `json:"title,omitempty"`
+	SolicitationNumber        string `json:"solicitationNumber"`
+	FullParentPathName        string `json:"fullParentPathName,omitempty"`
+	FullParentPathCode        string `json:"fullParentPathCode,omitempty"`
+	PostedDate                string `json:"postedDate,omitempty"`
+	Type                      string `json:"type,omitempty"`
+	BaseType                  string `json:"baseType,omitempty"`
+	ArchiveType               string `json:"archiveType,omitempty"`
+	ArchiveDate               string `json:"archiveDate,omitempty"`
+	TypeOfSetAsideDescription string `json:"typeOfSetAsideDescription,omitempty"`
+	TypeOfSetAside            string `json:"typeOfSetAside,omitempty"`
+	ResponseDeadLine          string `json:"responseDeadLine,omitempty"`
+	NaicsCode                 string `json:"naicsCode,omitempty"`
+	ClassificationCode        string `json:"classificationCode,omitempty"`
+	Active                    string `json:"active,omitempty"`
+	Description               string `json:"description,omitempty"`
+	OrganizationType          string `json:"organizationType,omitempty"`
+	UILink                    string `json:"uiLink,omitempty"`
 }
 
 type User struct {

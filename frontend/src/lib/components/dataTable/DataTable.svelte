@@ -37,6 +37,10 @@
                             <slot name="column" {row} {header} {getColValue}>
                                 {getColValue(header, row)}
                             </slot>
+
+                            {#if header.field === 'actions'}
+                                <slot name="actions" {row} {getColValue}></slot>
+                            {/if}
                         </td>
                     {/each}
                 </tr>

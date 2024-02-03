@@ -13,8 +13,8 @@ type App struct {
 }
 
 type LoginResponse struct {
-	Message string
-	Result  bool
+	Message string `json:"message"`
+	Result  bool   `json:"result"`
 }
 
 // NewApp creates a new App application struct

@@ -4,6 +4,8 @@
     import { type Header} from "$lib/components/dataTable/datatable";
     import {PullLatest, SearchOpportunities} from "$lib/wailsjs/go/main/App";
     import Button from "$lib/components/button/Button.svelte";
+    import Modal from "$lib/components/modal/Modal.svelte";
+    import OpportunityDetails from "./OpportunityDetails.svelte";
 
     let items: any[] = []
     const from: string = '12/01/2023'
@@ -26,31 +28,35 @@
     const headers: Header[] = [
         {
             label: 'Notice ID',
-            field: 'NoticeID'
+            field: 'noticeID'
         },
         {
             label: 'Title',
-            field: 'Title'
+            field: 'title'
         },
         {
             label: 'Solicitation Number',
-            field: 'SolicitationNumber'
+            field: 'solicitationNumber'
         },
         {
             label: 'Full Parent Path Name',
-            field: 'FullParentPathName'
+            field: 'fullParentPathName'
         },
         {
             label: 'Posted Date',
-            field: 'PostedDate'
+            field: 'postedDate'
         },
         {
             label: 'Type',
-            field: 'Type'
+            field: 'type'
         },
         {
             label: 'UILink',
-            field: 'UILink'
+            field: 'uiLink'
+        },
+        {
+            label: 'Actions',
+            field: 'actions'
         }
     ]
 
@@ -58,7 +64,6 @@
         isLoading = true
         SearchOpportunities(search, filters)
             .then((opportunitiesData) => {
-                console.log(opportunitiesData)
                 items = opportunitiesData || []
             })
             .finally(() => {
@@ -124,5 +129,15 @@
                 {getValue(header, row)}
             {/if}
         </span>
+        <div slot="actions" let:row={row}>
+            <Modal title="{row.title}">
+                <div slot="activator" let:show={show}>
+                    <Button on:click={show} size="sm">Show</Button>
+                </div>
+                <div slot="body">
+                    <OpportunityDetails opportunity="{row}"></OpportunityDetails>
+                </div>
+            </Modal>
+        </div>
     </DataTable>
 </div>

@@ -15,10 +15,10 @@
         isProcessing = true
 
         Login(username, password)
-            .then(({Message, Result}) => {
-                isSuccess = Result
-                resultText = Message
-                console.log(Message, Result)
+            .then(({message, result}) => {
+                isSuccess = result
+                resultText = message
+
                 dispatch('success', {isSuccess,resultText})
             })
             .finally(() => {
