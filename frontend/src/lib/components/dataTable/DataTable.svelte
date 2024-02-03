@@ -33,7 +33,11 @@
             {#each items as row}
                 <tr>
                     {#each headers as header, i}
-                        <td scope={i === 0 ? 'row' : 'col'}>{getColValue(header, row)}</td>
+                        <td>
+                            <slot name="column" {row} {header} {getColValue}>
+                                {getColValue(header, row)}
+                            </slot>
+                        </td>
                     {/each}
                 </tr>
             {/each}

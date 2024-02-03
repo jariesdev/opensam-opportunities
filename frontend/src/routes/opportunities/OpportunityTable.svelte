@@ -47,6 +47,10 @@
         {
             label: 'Type',
             field: 'Type'
+        },
+        {
+            label: 'UILink',
+            field: 'UILink'
         }
     ]
 
@@ -112,5 +116,13 @@
             <Button loading={isPulling} on:click={pullLatest} class="text-nowrap w-100">Pull Opportunities</Button>
         </div>
     </div>
-    <DataTable items={items} headers={headers} bind:loading={isLoading}></DataTable>
+    <DataTable items={items} headers={headers} bind:loading={isLoading} let:row={row}>
+        <span slot="column" let:row={row} let:header={header} let:getColValue={getValue}>
+            {#if header.field === 'UILink'}
+                <a href="{row.UILink}" target="_blank" class="fst-italic">visit</a>
+            {:else}
+                {getValue(header, row)}
+            {/if}
+        </span>
+    </DataTable>
 </div>
