@@ -163,7 +163,6 @@ func exampleResponse() SearchResult {
 
 	// unmarshall it
 	err = json.Unmarshal(data, &obj)
-	fmt.Print(obj)
 	if err != nil {
 		fmt.Println("error:", err)
 	}

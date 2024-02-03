@@ -2,7 +2,7 @@
     import { onMount } from 'svelte';
     import DataTable from "$lib/components/dataTable/DataTable.svelte";
     import { type Header} from "$lib/components/dataTable/datatable";
-    import {SearchOpportunities} from "$lib/wailsjs/go/main/App";
+    import {PullLatest, SearchOpportunities} from "$lib/wailsjs/go/main/App";
 
     let items: any[] = []
     const from: string = '12/01/2023'
@@ -48,11 +48,16 @@
             })
     }
 
+    function pullLatest() {
+        PullLatest()
+    }
+
     onMount(() => {
         loadData()
     })
 </script>
 
 <div class="opportunities-table">
+    <button class="btn btn-primary" on:click={pullLatest}>Pull</button>
     <DataTable items={items} headers={headers} bind:loading={isLoading}></DataTable>
 </div>

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"open-gsa/internal/api/opportunities"
+	"open-gsa/internal/repository"
 )
 
 // App struct
@@ -40,4 +41,8 @@ func (a *App) Login(username string, password string) LoginResponse {
 func (a *App) SearchOpportunities(dateFrom string, dateTo string) opportunities.SearchResult {
 	result := opportunities.GetOpportunities(dateFrom, dateTo)
 	return result
+}
+
+func (a *App) PullLatest() {
+	repository.PullLatest()
 }
