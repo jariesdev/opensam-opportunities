@@ -7,6 +7,8 @@
 </svelte:head>
 
 <div class="text-column">
-	<h1 class="mb-4">Opportunities</h1>
-	<OpportunityTable></OpportunityTable>
+	<div class="container">
+		<h1 class="mb-4">Opportunities</h1>
+		<OpportunityTable></OpportunityTable>
+	</div>
 </div>

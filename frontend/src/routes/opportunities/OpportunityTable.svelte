@@ -3,11 +3,13 @@
     import DataTable from "$lib/components/dataTable/DataTable.svelte";
     import { type Header} from "$lib/components/dataTable/datatable";
     import {PullLatest, SearchOpportunities} from "$lib/wailsjs/go/main/App";
+    import Button from "$lib/components/button/Button.svelte";
 
     let items: any[] = []
     const from: string = '12/01/2023'
     const to: string = '12/07/2023'
     let isLoading: boolean = false
+    let isPulling: boolean = false
 
     const headers: Header[] = [
         {
@@ -49,7 +51,10 @@
     }
 
     function pullLatest() {
-        PullLatest()
+        isPulling = true
+        PullLatest().finally(() => {
+            isPulling = false
+        })
     }
 
     onMount(() => {
@@ -58,6 +63,8 @@
 </script>
 
 <div class="opportunities-table">
-    <button class="btn btn-primary" on:click={pullLatest}>Pull</button>
+    <div class="d-flex justify-content-end mb-3">
+            <Button bind:loading={isPulling} on:click={pullLatest}>Pull Opportunities</Button>
+    </div>
     <DataTable items={items} headers={headers} bind:loading={isLoading}></DataTable>
 </div>
