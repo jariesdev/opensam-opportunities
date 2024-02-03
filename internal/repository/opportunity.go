@@ -22,13 +22,13 @@ func PullLatest() string {
 
 	// if the daily count exceeded return
 	if count > 5 {
-		return "Exceeded daily pull"
+		fmt.Printf("Exceeded daily pull")
 	}
 
 	fmt.Printf("Daily Pull Count: %d", count)
 
-	from := now.Format("MM/DD/YYYY")
-	to := now.Format("MM/DD/YYYY")
+	from := now.Format("02/01/2006")
+	to := now.AddDate(0, -6, 0).Format("02/01/2006")
 	result := opportunities.GetOpportunities(from, to)
 
 	var opportunityItems []opportunities.OpportunityData
