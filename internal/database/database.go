@@ -1,7 +1,9 @@
 package database
 
 import (
-	"gorm.io/driver/sqlite"
+	// requires CGO_ENABLED=1
+	//"gorm.io/driver/sqlite"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 	"log"
 )
