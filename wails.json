@@ -1,14 +1,14 @@
 {
   "$schema": "https://wails.io/schemas/config.v2.json",
-  "name": "test2",
-  "outputfilename": "test2",
+  "name": "OpenSam",
+  "outputfilename": "OpenSam",
   "frontend:install": "npm install",
   "frontend:build": "npm run build",
   "frontend:dev:watcher": "npm run dev",
   "frontend:dev:serverUrl": "auto",
   "author": {
     "name": "Jay Aries Flores",
-    "email": "aries@sixtyswitched.com"
+    "email": "jariesdev@gmail.com"
   },
   "wailsjsdir": "./frontend/src/lib"
 }
