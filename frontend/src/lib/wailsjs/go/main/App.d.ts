@@ -6,6 +6,10 @@ import {database} from '../models';
 
 export function GetCwd():Promise<string>;
 
+export function GetOpportunityNaicsCodes():Promise<Array<string>>;
+
+export function GetOpportunityTypes():Promise<Array<string>>;
+
 export function Greet(arg1:string):Promise<string>;
 
 export function Login(arg1:string,arg2:string):Promise<main.LoginResponse>;

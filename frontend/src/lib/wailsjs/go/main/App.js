@@ -6,6 +6,14 @@ export function GetCwd() {
   return window['go']['main']['App']['GetCwd']();
 }
 
+export function GetOpportunityNaicsCodes() {
+  return window['go']['main']['App']['GetOpportunityNaicsCodes']();
+}
+
+export function GetOpportunityTypes() {
+  return window['go']['main']['App']['GetOpportunityTypes']();
+}
+
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }

@@ -12,10 +12,12 @@ import (
 )
 
 type OpportunityFilter struct {
-	FromDate string `json:"fromDate"`
-	ToDate   string `json:"toDate"`
-	Page     uint32 `json:"page"`
-	PerPage  uint32 `json:"perPage"`
+	FromDate  string   `json:"fromDate"`
+	ToDate    string   `json:"toDate"`
+	Type      []string `json:"type"`
+	NaicsCode []string `json:"naicsCode"`
+	Page      uint32   `json:"page"`
+	PerPage   uint32   `json:"perPage"`
 }
 
 func PullLatest() string {
@@ -134,6 +136,12 @@ func Search(keyword string, filters OpportunityFilter) []database.Opportunity {
 	if filters.ToDate != "" {
 		query.Where("DATE(posted_date) <= ?", filters.ToDate)
 	}
+	if len(filters.Type) > 0 {
+		query.Where("type IN (?)", strings.Join(filters.Type, ","))
+	}
+	if len(filters.NaicsCode) > 0 {
+		query.Where("naics_code IN (?)", strings.Join(filters.NaicsCode, ","))
+	}
 
 	if filters.Page > 0 && filters.PerPage > 0 {
 		offset := (filters.Page - 1) * filters.PerPage
@@ -148,4 +156,18 @@ func Search(keyword string, filters OpportunityFilter) []database.Opportunity {
 	fmt.Printf("Total Results:%d", count)
 
 	return result
+}
+
+func GetTypes() []string {
+	var types []string
+	db := database.GetDbInstance()
+	db.Model(&database.Opportunity{}).Distinct("type").Order("type").Find(&types)
+	return types
+}
+
+func GetNaicsCodes() []string {
+	var types []string
+	db := database.GetDbInstance()
+	db.Model(&database.Opportunity{}).Distinct("naics_code").Order("naics_code").Find(&types)
+	return types
 }

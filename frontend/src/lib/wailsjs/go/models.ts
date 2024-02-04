@@ -141,6 +141,8 @@ export namespace opportunity {
 	export class OpportunityFilter {
 	    fromDate: string;
 	    toDate: string;
+	    type: string[];
+	    naicsCode: string[];
 	    page: number;
 	    perPage: number;
 	
@@ -152,6 +154,8 @@ export namespace opportunity {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.fromDate = source["fromDate"];
 	        this.toDate = source["toDate"];
+	        this.type = source["type"];
+	        this.naicsCode = source["naicsCode"];
 	        this.page = source["page"];
 	        this.perPage = source["perPage"];
 	    }

@@ -150,3 +150,11 @@ func downloadReport(data []database.Opportunity, filename string) {
 func (a *App) GetCwd() (string, error) {
 	return os.Getwd()
 }
+
+func (a *App) GetOpportunityTypes() []string {
+	return opportunityRepo.GetTypes()
+}
+
+func (a *App) GetOpportunityNaicsCodes() []string {
+	return opportunityRepo.GetNaicsCodes()
+}

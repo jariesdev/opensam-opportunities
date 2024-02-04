@@ -2,23 +2,33 @@
     import { onMount } from 'svelte';
     import DataTable from "$lib/components/dataTable/DataTable.svelte";
     import { type Header} from "$lib/components/dataTable/datatable";
-    import {PullLatest, SearchOpportunities} from "$lib/wailsjs/go/main/App";
+    import {
+        GetOpportunityNaicsCodes,
+        GetOpportunityTypes,
+        PullLatest,
+        SearchOpportunities
+    } from "$lib/wailsjs/go/main/App";
     import Button from "$lib/components/button/Button.svelte";
     import Modal from "$lib/components/modal/Modal.svelte";
     import OpportunityDetails from "./OpportunityDetails.svelte";
     import {opportunity} from "$lib/wailsjs/go/models";
     import OpportunityFilter = opportunity.OpportunityFilter;
     import {debounce} from "lodash";
+    import Multiselect from "$lib/components/input/Multiselect.svelte";
 
     let items: any[] = []
     let isLoading: boolean = false
     let isPulling: boolean = false
     let search: string = ""
     let showFilter: boolean = false
+    let opportunityTypes: any[] = []
+    let naicsCodes: any[] = []
 
     let filters: OpportunityFilter = {
         fromDate: "",
         toDate: "",
+        type: [],
+        naicsCode: [],
         page: 1,
         perPage: 10
     }
@@ -91,8 +101,18 @@
         SearchOpportunities(search, filters, true)
     }
 
+    function loadOptions() {
+        GetOpportunityTypes().then((result) => {
+            opportunityTypes = result || []
+        })
+        GetOpportunityNaicsCodes().then((result) => {
+            naicsCodes = result || []
+        })
+    }
+
     onMount(() => {
         loadData()
+        loadOptions()
     })
 </script>
 
@@ -113,6 +133,12 @@
             <div class="col-2">
                 <input type="date" bind:value={filters.toDate} class="form-control" placeholder="Posted To" on:input={loadData}>
             </div>
+            <div class="col-2">
+                <Multiselect bind:value={filters.type} options="{opportunityTypes}" on:change={loadData} />
+            </div>
+            <div class="col-2">
+                <Multiselect bind:value={filters.naicsCode} options="{naicsCodes}" on:change={loadData} />
+            </div>
         {/if}
         <div class="col-12 col-sm-auto mx-auto">
 
@@ -127,7 +153,7 @@
             </Button>
         </div>
         <div class="col-12 col-sm-auto flex-grow-0 mb-2 mb-sm-0">
-            <Button loading={isPulling} on:click={pullLatest} class="text-nowrap w-100">Pull Opportunities</Button>
+            <Button loading={isPulling} on:click={pullLatest} class="text-nowrap w-100">Pull Latest</Button>
         </div>
         <div class="col-12 col-sm-auto flex-grow-0 mb-2 mb-sm-0">
             <Button on:click={downloadAsCsv} class="text-nowrap w-100">Export</Button>
