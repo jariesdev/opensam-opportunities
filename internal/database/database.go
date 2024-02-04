@@ -1,11 +1,12 @@
 package database
 
 import (
+	"fmt"
 	// requires CGO_ENABLED=1
 	//"gorm.io/driver/sqlite"
 	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
-	"log"
+	"os"
 )
 
 type Opportunity struct {
@@ -44,7 +45,35 @@ type Setting struct {
 }
 
 func GetDbInstance() *gorm.DB {
-	db, _ := gorm.Open(sqlite.Open("database.sqlite"))
+	path, pathErr := os.Getwd()
+	if pathErr != nil {
+		panic(pathErr)
+	}
+
+	//path, pathErr := os.Executable()
+	//if pathErr != nil {
+	//	log.Println(pathErr)
+	//}
+	//
+	//// If the file doesn't exist, create it, or append to the file
+	_, errX := os.OpenFile("database.sqlite", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if errX != nil {
+		panic(errX)
+	}
+	//f.Close()
+
+	fmt.Printf("CWD: %s ", path)
+
+	dbName := os.Getenv("OPENSAM_DB")
+	if dbName == "" {
+		dbName = "database.sqlite"
+	}
+
+	db, dbErr := gorm.Open(sqlite.Open(dbName), &gorm.Config{})
+	if dbErr != nil {
+		fmt.Print(dbErr)
+		panic(dbErr)
+	}
 
 	// Migrate the schema
 	err := db.AutoMigrate(&User{}, &Opportunity{}, &Setting{})
