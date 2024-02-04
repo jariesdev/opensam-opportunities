@@ -1,6 +1,7 @@
 <script lang="ts">
     import logo from '.././assets/images/logo.png'
     import LoginForm from "$lib/components/LoginForm.svelte";
+    import { goto } from '$app/navigation'
 
     let message: string = "Please enter your credentials 👇"
     let wasFailed: boolean = false
@@ -14,7 +15,7 @@
         }
 
         wasFailed = false
-        window.location.href = '/opportunities'
+        goto('/opportunities')
     }
 </script>
 

@@ -30,7 +30,7 @@
 <section>
     <div class="row">
         <div class="col-sm-5 mx-auto">
-            <form on:submit|preventDefault={login}>
+            <form method="POST" on:submit|preventDefault={login}>
                 <div class="input-box" id="input">
                     <input autocomplete="off"
                            bind:value={username}
