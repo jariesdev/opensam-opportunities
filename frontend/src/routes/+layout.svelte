@@ -1,50 +1,60 @@
-<script>
-	import 'bootstrap/dist/css/bootstrap.min.css';
-	import 'bootstrap/dist/js/bootstrap.min.js';
-	import './styles.scss';
+<script lang="ts">
+    import 'bootstrap/dist/css/bootstrap.min.css';
+    import 'bootstrap/dist/js/bootstrap.min.js';
+    import './styles.scss';
+    import {onMount} from "svelte";
+    import {GetCwd} from "$lib/wailsjs/go/main/App";
+
+    let cwd: string = "";
+
+    onMount(() => {
+        GetCwd().then((path) => {
+            cwd = path
+        })
+    })
 </script>
 
 <div class="app">
-	<main>
-		<slot />
-	</main>
+    <main>
+        <slot/>
+    </main>
 
-	<footer>
-		App for everyone!
-	</footer>
+    <footer>
+        App for everyone! AppDir: {cwd}
+    </footer>
 </div>
 
 <style>
-	.app {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-	}
+    .app {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
 
-	main {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		padding: 1rem;
-		margin: 0 auto;
-		box-sizing: border-box;
-		width: 100%;
-	}
+    main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        margin: 0 auto;
+        box-sizing: border-box;
+        width: 100%;
+    }
 
-	footer {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 12px;
-		color: #999;
-		font-style: italic;
-		font-size: 12px;
-	}
+    footer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 12px;
+        color: #999;
+        font-style: italic;
+        font-size: 12px;
+    }
 
-	@media (min-width: 480px) {
-		footer {
-			padding: 12px 0;
-		}
-	}
+    @media (min-width: 480px) {
+        footer {
+            padding: 12px 0;
+        }
+    }
 </style>

@@ -4,6 +4,8 @@ import {main} from '../models';
 import {opportunity} from '../models';
 import {database} from '../models';
 
+export function GetCwd():Promise<string>;
+
 export function Greet(arg1:string):Promise<string>;
 
 export function Login(arg1:string,arg2:string):Promise<main.LoginResponse>;

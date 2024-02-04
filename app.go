@@ -31,7 +31,15 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	database.RunSeeder()
+	changeCwdDir()
 	a.ctx = ctx
+}
+
+func changeCwdDir() {
+	home, _ := os.UserHomeDir()
+	newHomePath := filepath.Join(home, "OpenSamGov")
+	_ = os.MkdirAll(newHomePath, os.ModePerm)
+	_ = os.Chdir(newHomePath)
 }
 
 // Greet returns a greeting for the given name
@@ -137,4 +145,8 @@ func downloadReport(data []database.Opportunity, filename string) {
 	csvwriter.Flush()
 	csvFile.Close()
 
+}
+
+func (a *App) GetCwd() (string, error) {
+	return os.Getwd()
 }
