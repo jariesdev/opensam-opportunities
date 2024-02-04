@@ -85,7 +85,7 @@ func Search(keyword string, filters OpportunityFilter) []database.Opportunity {
 	var result []database.Opportunity
 	db := database.GetDbInstance()
 	// keywords
-	query := db.Where("notice_id LIKE ? OR title LIKE ? OR solicitation_number LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%")
+	query := db.Where("notice_id LIKE ? OR title LIKE ? OR solicitation_number LIKE ? OR full_parent_path_name LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%")
 
 	if filters.FromDate != "" {
 		query.Where("DATE(posted_date) >= ?", filters.FromDate)
