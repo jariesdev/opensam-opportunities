@@ -2,6 +2,8 @@ package database
 
 import (
 	"fmt"
+	"log"
+
 	// requires CGO_ENABLED=1
 	//"gorm.io/driver/sqlite"
 	"github.com/glebarez/sqlite"
