@@ -12,8 +12,10 @@ import (
 )
 
 type OpportunityFilter struct {
-	FromDate string
-	ToDate   string
+	FromDate string `json:"fromDate"`
+	ToDate   string `json:"toDate"`
+	Page     uint32 `json:"page"`
+	PerPage  uint32 `json:"perPage"`
 }
 
 func PullLatest() string {
@@ -133,7 +135,17 @@ func Search(keyword string, filters OpportunityFilter) []database.Opportunity {
 		query.Where("DATE(posted_date) <= ?", filters.ToDate)
 	}
 
+	if filters.Page > 0 && filters.PerPage > 0 {
+		offset := (filters.Page - 1) * filters.PerPage
+		query.Offset(int(offset)).Limit(int(filters.PerPage))
+	}
+
 	query.Order("posted_date desc").Find(&result)
+
+	var count int64
+	query.Count(&count)
+
+	fmt.Printf("Total Results:%d", count)
 
 	return result
 }

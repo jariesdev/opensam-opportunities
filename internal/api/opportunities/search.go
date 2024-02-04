@@ -74,12 +74,12 @@ type OfficeAddress struct {
 	State       string `json:"state"`
 }
 type PointOfContact struct {
-	Fax      interface{} `json:"fax"`
-	Type     string      `json:"type"`
-	Email    string      `json:"email"`
-	Phone    string      `json:"phone"`
-	Title    string      `json:"title"`
-	FullName string      `json:"fullName"`
+	Fax      string `json:"fax"`
+	Type     string `json:"type"`
+	Email    string `json:"email"`
+	Phone    string `json:"phone"`
+	Title    string `json:"title"`
+	FullName string `json:"fullName"`
 }
 
 type Award struct {

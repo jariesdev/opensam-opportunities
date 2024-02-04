@@ -136,3 +136,26 @@ export namespace main {
 
 }
 
+export namespace opportunity {
+	
+	export class OpportunityFilter {
+	    fromDate: string;
+	    toDate: string;
+	    page: number;
+	    perPage: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new OpportunityFilter(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.fromDate = source["fromDate"];
+	        this.toDate = source["toDate"];
+	        this.page = source["page"];
+	        this.perPage = source["perPage"];
+	    }
+	}
+
+}
+

@@ -1,12 +1,23 @@
 <script lang="ts">
+    import loadingImg from '../../../../../frontend/src/assets/images/pikachu.gif'
     import type {Header} from "$lib/components/dataTable/datatable";
+    import { createEventDispatcher } from 'svelte'
 
     export let items: any[] = [];
     export let headers: Header[] = []
     export let loading: boolean = false
+    export let page: number = 1
+    export let perPage: number = 20
+
+
+    const dispatch = createEventDispatcher()
 
     function getColValue(header: Header, row: any): string {
         return row[header.field] || ''
+    }
+
+    function handleFilterChange() {
+        dispatch('filter')
     }
 </script>
 
@@ -48,5 +59,34 @@
             </tbody>
         </table>
     </div>
-    <div class="loading-indicator d-none" class:d-block={loading}>Loading...</div>
+    <div class="row mt-3 justify-content-end">
+        <div class="col-2">
+            <div class="input-group">
+                <span class="input-group-text">Page</span>
+                <input bind:value={page} class="form-control" type="number" min="0" max="9999" on:change={handleFilterChange}>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="input-group">
+                <span class="input-group-text">Size</span>
+                <input bind:value={perPage} class="form-control" type="number" min="0" max="9999" on:change={handleFilterChange}>
+            </div>
+        </div>
+    </div>
+    <div class="loading-indicator text-nowrap me-3 mb-3 {!loading ? 'd-none' : ''}" >
+        <img src="{loadingImg}" alt="" class="loading-pikachu">
+        <span class="sr-only">Loading</span>
+    </div>
 </div>
+
+<style>
+    .loading-indicator {
+        pointer-events: none;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+    }
+    .loading-pikachu {
+        width: 50px;
+    }
+</style>

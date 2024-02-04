@@ -7,23 +7,20 @@
     import Modal from "$lib/components/modal/Modal.svelte";
     import OpportunityDetails from "./OpportunityDetails.svelte";
     import {downloadCsvFromArray} from "$lib/helpers/data-export";
+    import {opportunity} from "$lib/wailsjs/go/models";
+    import OpportunityFilter = opportunity.OpportunityFilter;
 
     let items: any[] = []
-    const from: string = '12/01/2023'
-    const to: string = '12/07/2023'
     let isLoading: boolean = false
     let isPulling: boolean = false
     let search: string = ""
     let showFilter: boolean = false
 
-    interface OpportunityFilter {
-        fromDate: string
-        toDate: string
-    }
-
     let filters: OpportunityFilter = {
         fromDate: "",
-        toDate: ""
+        toDate: "",
+        page: 1,
+        perPage: 25
     }
 
     const headers: Header[] = [
@@ -136,7 +133,7 @@
             <Button on:click={downloadAsCsv} class="text-nowrap w-100">Export</Button>
         </div>
     </div>
-    <DataTable items={items} headers={headers} bind:loading={isLoading} let:row={row}>
+    <DataTable items={items} headers={headers} bind:page={filters.page} bind:perPage={filters.perPage} bind:loading={isLoading} on:filter={loadData}>
         <div slot="actions" let:row={row}>
             <Modal title="{row.title}">
                 <div slot="activator" class="text-center text-nowrap" let:show={show}>
