@@ -6,9 +6,9 @@
     import Button from "$lib/components/button/Button.svelte";
     import Modal from "$lib/components/modal/Modal.svelte";
     import OpportunityDetails from "./OpportunityDetails.svelte";
-    import {downloadCsvFromArray} from "$lib/helpers/data-export";
     import {opportunity} from "$lib/wailsjs/go/models";
     import OpportunityFilter = opportunity.OpportunityFilter;
+    import {debounce} from "lodash";
 
     let items: any[] = []
     let isLoading: boolean = false
@@ -58,7 +58,7 @@
         }
     ]
 
-    function loadData(): void {
+    const loadData = debounce(function (): void {
         isLoading = true
         SearchOpportunities(search, filters)
             .then((opportunitiesData) => {
@@ -67,9 +67,9 @@
             .finally(() => {
                 isLoading = false
             })
-    }
+    }, 200, {maxWait: 1000})
 
-    function pullLatest() {
+    const pullLatest = debounce(function (): void {
         isPulling = true
         PullLatest()
             .then(() => {
@@ -78,7 +78,7 @@
             .finally(() => {
                 isPulling = false
             })
-    }
+    }, 250)
 
     function toggleFilter() {
         showFilter = !showFilter
