@@ -9,6 +9,7 @@ import (
 	"open-gsa/internal/database"
 	opportunityRepo "open-gsa/internal/repository/opportunity"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
