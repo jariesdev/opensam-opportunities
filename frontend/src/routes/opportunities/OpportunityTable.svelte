@@ -20,7 +20,7 @@
         fromDate: "",
         toDate: "",
         page: 1,
-        perPage: 25
+        perPage: 10
     }
 
     const headers: Header[] = [

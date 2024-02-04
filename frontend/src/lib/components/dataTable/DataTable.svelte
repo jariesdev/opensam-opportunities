@@ -8,6 +8,7 @@
     export let loading: boolean = false
     export let page: number = 1
     export let perPage: number = 20
+    export let wordWrap: boolean = false
 
 
     const dispatch = createEventDispatcher()
@@ -23,7 +24,7 @@
 
 <div class="data-table">
     <div class="table-responsive">
-        <table class="table">
+        <table class="table {wordWrap ? 'table-sm single-line-content' : ''}">
             <thead>
             <tr>
                 {#each headers as header}
@@ -59,7 +60,15 @@
             </tbody>
         </table>
     </div>
-    <div class="row mt-3 justify-content-end">
+    <div class="row mt-3 ">
+        <div class="col-2">
+
+            <label class="form-check">
+                <input type="checkbox" bind:checked="{wordWrap}" class="form-check-input">
+                Compact View
+            </label>
+        </div>
+        <div class="col mx-auto"></div>
         <div class="col-2">
             <div class="input-group">
                 <span class="input-group-text">Page</span>
@@ -79,7 +88,7 @@
     </div>
 </div>
 
-<style>
+<style lang="scss">
     .loading-indicator {
         pointer-events: none;
         position: fixed;
@@ -88,5 +97,16 @@
     }
     .loading-pikachu {
         width: 50px;
+    }
+
+    table {
+        &.single-line-content {
+            td {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                max-width: 300px;
+            }
+        }
     }
 </style>
