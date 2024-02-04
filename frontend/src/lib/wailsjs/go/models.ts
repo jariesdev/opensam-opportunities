@@ -1,25 +1,67 @@
 export namespace database {
 	
+	export class Link {
+	    rel: string;
+	    href: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Link(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.rel = source["rel"];
+	        this.href = source["href"];
+	    }
+	}
+	export class PointOfContact {
+	    fax: string;
+	    type: string;
+	    email: string;
+	    phone: string;
+	    title: string;
+	    fullName: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new PointOfContact(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.fax = source["fax"];
+	        this.type = source["type"];
+	        this.email = source["email"];
+	        this.phone = source["phone"];
+	        this.title = source["title"];
+	        this.fullName = source["fullName"];
+	    }
+	}
 	export class Opportunity {
-	    noticeID?: string;
-	    title?: string;
+	    noticeID: string;
+	    title: string;
 	    solicitationNumber: string;
-	    fullParentPathName?: string;
-	    fullParentPathCode?: string;
-	    postedDate?: string;
-	    type?: string;
-	    baseType?: string;
-	    archiveType?: string;
-	    archiveDate?: string;
-	    typeOfSetAsideDescription?: string;
-	    typeOfSetAside?: string;
-	    responseDeadLine?: string;
-	    naicsCode?: string;
-	    classificationCode?: string;
-	    active?: string;
-	    description?: string;
-	    organizationType?: string;
-	    uiLink?: string;
+	    fullParentPathName: string;
+	    fullParentPathCode: string;
+	    postedDate: string;
+	    type: string;
+	    baseType: string;
+	    archiveType: string;
+	    archiveDate: string;
+	    typeOfSetAsideDescription: string;
+	    typeOfSetAside: string;
+	    responseDeadLine: string;
+	    naicsCode: string;
+	    naicsCodes: string;
+	    classificationCode: string;
+	    active: string;
+	    pointOfContact: PointOfContact[];
+	    description: string;
+	    organizationType: string;
+	    officeAddress: string;
+	    additionalInfoLink: string;
+	    uiLink: string;
+	    links: Link[];
+	    resourceLinks: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Opportunity(source);
@@ -41,12 +83,36 @@ export namespace database {
 	        this.typeOfSetAside = source["typeOfSetAside"];
 	        this.responseDeadLine = source["responseDeadLine"];
 	        this.naicsCode = source["naicsCode"];
+	        this.naicsCodes = source["naicsCodes"];
 	        this.classificationCode = source["classificationCode"];
 	        this.active = source["active"];
+	        this.pointOfContact = this.convertValues(source["pointOfContact"], PointOfContact);
 	        this.description = source["description"];
 	        this.organizationType = source["organizationType"];
+	        this.officeAddress = source["officeAddress"];
+	        this.additionalInfoLink = source["additionalInfoLink"];
 	        this.uiLink = source["uiLink"];
+	        this.links = this.convertValues(source["links"], Link);
+	        this.resourceLinks = source["resourceLinks"];
 	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
 	}
 
 }

@@ -1,11 +1,13 @@
 package opportunity
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gen2brain/beeep"
 	"open-gsa/internal/api/opportunities"
 	"open-gsa/internal/database"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -58,26 +60,62 @@ func insertToDB(opportunityData []opportunities.OpportunityData) {
 	db.FirstOrCreate(&database.Setting{Key: "last_pull", Value: time.Now().Format(time.DateTime)})
 	db.Where(database.Setting{Key: "last_pull"}).Updates(database.Setting{Value: time.Now().Format(time.DateTime)})
 	for _, item := range opportunityData {
+		officeAddress, _ := json.Marshal(item.OfficeAddress)
+
 		row := &database.Opportunity{
-			NoticeID:           item.NoticeID,
-			Title:              item.Title,
-			SolicitationNumber: item.SolicitationNumber,
-			FullParentPathName: item.FullParentPathName,
-			FullParentPathCode: item.FullParentPathCode,
-			PostedDate:         item.PostedDate,
-			Type:               item.Type,
-			BaseType:           item.BaseType,
-			ArchiveType:        item.ArchiveType,
-			ArchiveDate:        item.ArchiveDate,
-			ResponseDeadLine:   item.ResponseDeadLine,
-			NaicsCode:          item.NaicsCode,
-			ClassificationCode: item.ClassificationCode,
-			Active:             item.Active,
-			Description:        item.Description,
-			OrganizationType:   item.OrganizationType,
-			UILink:             item.UILink,
+			NoticeID:                  item.NoticeID,
+			Title:                     item.Title,
+			SolicitationNumber:        item.SolicitationNumber,
+			FullParentPathName:        item.FullParentPathName,
+			FullParentPathCode:        item.FullParentPathCode,
+			PostedDate:                item.PostedDate,
+			Type:                      item.Type,
+			BaseType:                  item.BaseType,
+			ArchiveType:               item.ArchiveType,
+			ArchiveDate:               item.ArchiveDate,
+			ResponseDeadLine:          item.ResponseDeadLine,
+			NaicsCode:                 item.NaicsCode,
+			ClassificationCode:        item.ClassificationCode,
+			Active:                    item.Active,
+			Description:               item.Description,
+			OrganizationType:          item.OrganizationType,
+			UILink:                    item.UILink,
+			TypeOfSetAsideDescription: item.TypeOfSetAsideDescription,
+			TypeOfSetAside:            item.TypeOfSetAside,
+			NaicsCodes:                strings.Join(item.NaicsCodes, ","),
+			OfficeAddress:             string(officeAddress),
+			AdditionalInfoLink:        item.AdditionalInfoLink,
+			ResourceLinks:             strings.Join(item.ResourceLinks, ","),
 		}
 		db.Where(database.Opportunity{NoticeID: item.NoticeID}).Assign(row).FirstOrCreate(row)
+
+		// store links
+		for _, link := range item.Links {
+			linkModel := &database.Link{
+				Rel:  link.Rel,
+				Href: link.Href,
+			}
+			db.FirstOrCreate(linkModel, &database.Link{
+				OpportunityID: row.ID,
+				Href:          link.Href,
+			})
+		}
+
+		// store point of contracts
+		for _, poc := range item.PointOfContact {
+			linkModel := &database.PointOfContact{
+				Fax:      poc.Fax,
+				Type:     poc.Type,
+				Email:    poc.Email,
+				Phone:    poc.Phone,
+				Title:    poc.Email,
+				FullName: poc.FullName,
+			}
+			db.FirstOrCreate(linkModel, &database.PointOfContact{
+				OpportunityID: row.ID,
+				Email:         poc.Email,
+			})
+		}
 	}
 }
 
@@ -86,6 +124,7 @@ func Search(keyword string, filters OpportunityFilter) []database.Opportunity {
 	db := database.GetDbInstance()
 	// keywords
 	query := db.Where("notice_id LIKE ? OR title LIKE ? OR solicitation_number LIKE ? OR full_parent_path_name LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%")
+	query.Preload("PointOfContact").Preload("Links")
 
 	if filters.FromDate != "" {
 		query.Where("DATE(posted_date) >= ?", filters.FromDate)

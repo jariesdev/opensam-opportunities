@@ -94,11 +94,6 @@
         SearchOpportunities(search, filters, true)
     }
 
-    function openUrl(url: string):null {
-        window.location = url
-        return null
-    }
-
     onMount(() => {
         loadData()
     })
