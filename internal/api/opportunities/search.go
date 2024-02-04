@@ -178,12 +178,15 @@ func GetOpportunities(dateFrom string, dateTo string) SearchResult {
 
 func getBaseUrl() string {
 	//envFile, _ := godotenv.Read(".env")
-	return "https://api-alpha.sam.gov"
+	//return "https://api-alpha.sam.gov"
+	return "https://api.sam.gov"
 }
 func getApiKey() string {
 	//envFile, _ := godotenv.Read(".env")
 	//return "3XASl0fa2aW5gvsMZQdbgqNDp3QPEJ8XnSsPmEFA"
-	return "8vZZYVauOCfEjrPbWlE6hgbUNvK9BLE1O5vm5axq"
+	//return "8vZZYVauOCfEjrPbWlE6hgbUNvK9BLE1O5vm5axq"
+	// prod
+	return "PqJ4mFnwiHJwoIUEgKVrmI1Mw2d2yENklw6UJues"
 }
 
 func exampleResponse() SearchResult {
