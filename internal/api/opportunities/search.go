@@ -10,9 +10,9 @@ import (
 )
 
 type SearchResult struct {
-	TotalRecords      int               `json:"totalRecords"`
-	Limit             int               `json:"limit"`
-	Offset            int               `json:"offset"`
+	TotalRecords      int32             `json:"totalRecords"`
+	Limit             int32             `json:"limit"`
+	Offset            int32             `json:"offset"`
 	OpportunitiesData []OpportunityData ` json:"opportunitiesData"`
 	Links             []ResultLink      `json:"links"`
 }
@@ -149,7 +149,7 @@ func getJson(url string, target interface{}) error {
 //	fmt.Print(body)
 //}
 
-func GetOpportunities(dateFrom string, dateTo string) SearchResult {
+func GetOpportunities(dateFrom string, dateTo string, ptype string) SearchResult {
 	//return exampleResponse()
 
 	var url string
@@ -165,8 +165,11 @@ func GetOpportunities(dateFrom string, dateTo string) SearchResult {
 	if dateTo != "" {
 		url += "&postedTo=" + dateTo
 	}
+	if ptype != "" {
+		url += "&ptype=" + ptype
+	}
 	//url = "https://api.sam.gov/prod/opportunities/v2/search?api_key={{apiKey}}&limit=1000&postedFrom=12/01/2023&postedTo=12/07/2023"
-	fmt.Printf("Request to URL: %s ", url)
+	fmt.Printf("Request to URL: %s \n ", url)
 	//return SearchResult{}
 	err := getJson(url, &result)
 	if err != nil {

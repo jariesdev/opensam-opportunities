@@ -30,32 +30,38 @@ func PullLatest() string {
 		count, _ = strconv.Atoi(lastPull.Value)
 	}
 
-	// if the daily count exceeded return
-	if count > 5 {
-		fmt.Printf("Exceeded daily pull")
+	var totalItems int32
+	ptypes := []string{"p", "r", "o"}
+	for _, ptype := range ptypes {
+		// if the daily count exceeded return
+		if count > 5 {
+			fmt.Printf("Exceeded daily pull")
+		}
+
+		fmt.Printf("Daily Pull Count: %d", count)
+
+		from := time.Now().AddDate(0, 0, -7).Format("01/02/2006")
+		to := time.Now().Format("01/02/2006")
+		result := opportunities.GetOpportunities(from, to, ptype)
+
+		totalItems += result.TotalRecords
+
+		var opportunityItems []opportunities.OpportunityData
+		if result.OpportunitiesData != nil {
+			opportunityItems = result.OpportunitiesData
+			insertToDB(opportunityItems)
+		}
+
+		// update daily count
+		db.Where(database.Setting{Key: "daily_pull_count"}).Updates(database.Setting{Value: strconv.Itoa(count + 1)})
 	}
-
-	fmt.Printf("Daily Pull Count: %d", count)
-
-	from := time.Now().AddDate(0, -1, 0).Format("01/02/2006")
-	to := time.Now().Format("01/02/2006")
-	result := opportunities.GetOpportunities(from, to)
-
-	var opportunityItems []opportunities.OpportunityData
-	if result.OpportunitiesData != nil {
-		opportunityItems = result.OpportunitiesData
-		insertToDB(opportunityItems)
-	}
-
-	// update daily count
-	db.Where(database.Setting{Key: "daily_pull_count"}).Updates(database.Setting{Value: strconv.Itoa(count + 1)})
 
 	err := beeep.Alert("OpenGsaApp", "Pulled latest opportunities.", "static/favicon.png")
 	if err != nil {
 		panic(err)
 	}
 
-	return fmt.Sprintf("Pulled %d items", len(opportunityItems))
+	return fmt.Sprintf("Pulled %d items \n", totalItems)
 }
 
 // insert if not exists or update if exists based on notice ID
