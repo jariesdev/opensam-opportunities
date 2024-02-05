@@ -56,7 +56,7 @@ func (a *App) Login(username string, password string) LoginResponse {
 	return LoginResponse{Message: fmt.Sprintf("Welcome %s!", username), Result: success}
 }
 
-func (a *App) SearchOpportunities(keyword string, filters opportunityRepo.OpportunityFilter, saveAs bool) []database.Opportunity {
+func (a *App) SearchOpportunities(keyword string, filters opportunityRepo.OpportunityFilter, saveAs bool) opportunityRepo.PaginatedResult {
 	result := opportunityRepo.Search(keyword, filters)
 
 	if saveAs {
@@ -77,7 +77,7 @@ func (a *App) SearchOpportunities(keyword string, filters opportunityRepo.Opport
 			log.Fatal(err)
 		}
 		log.Println("OpenFile: selection ", selection)
-		downloadReport(result, selection)
+		downloadReport(result.Data, selection)
 	}
 
 	return result

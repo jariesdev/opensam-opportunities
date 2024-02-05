@@ -6,10 +6,19 @@
     export let items: any[] = [];
     export let headers: Header[] = []
     export let loading: boolean = false
+    export let total: number = 0
     export let page: number = 1
     export let perPage: number = 20
     export let wordWrap: boolean = false
+     let perPageOptions: number[] = [10,20,50,100,1000]
 
+    $: maxPage = () => {
+        if(total === 0) {
+            return 1
+        }else {
+            return Math.ceil(total / perPage)
+        }
+    }
 
     const dispatch = createEventDispatcher()
 
@@ -62,24 +71,27 @@
     </div>
     <div class="row mt-3 ">
         <div class="col-2">
-
+            <span class="fst-italic">{total} total records</span>
+        </div>
+        <div class="col mx-auto"></div>
+        <div class="col flex-grow-0 text-nowrap align-self-center">
             <label class="form-check">
                 <input type="checkbox" bind:checked="{wordWrap}" class="form-check-input">
                 Compact View
             </label>
         </div>
-        <div class="col mx-auto"></div>
         <div class="col-2">
             <div class="input-group">
                 <span class="input-group-text">Page</span>
-                <input bind:value={page} class="form-control" type="number" min="0" max="9999" on:change={handleFilterChange}>
+                <input bind:value={page} class="form-control" type="number" min="1" max="{maxPage()}" on:change={handleFilterChange}>
             </div>
         </div>
         <div class="col-2">
-            <div class="input-group">
-                <span class="input-group-text">Size</span>
-                <input bind:value={perPage} class="form-control" type="number" min="0" max="9999" on:change={handleFilterChange}>
-            </div>
+            <select class="form-control" bind:value={perPage} on:change={handleFilterChange}>
+                {#each perPageOptions as option}
+                    <option value="{option}">{option} per page</option>
+                {/each}
+            </select>
         </div>
     </div>
     <div class="loading-indicator text-nowrap me-3 mb-3 {!loading ? 'd-none' : ''}" >

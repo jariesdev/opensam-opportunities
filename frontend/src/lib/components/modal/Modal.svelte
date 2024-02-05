@@ -1,6 +1,6 @@
 <slot name="activator" {show} {hide}></slot>
 
-<div bind:this={modalRef} class="modal modal-lg" tabindex="-1">
+<div bind:this={modalRef} class="modal fade modal-xl" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

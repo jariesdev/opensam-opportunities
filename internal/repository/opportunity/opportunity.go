@@ -20,6 +20,11 @@ type OpportunityFilter struct {
 	PerPage   uint32   `json:"perPage"`
 }
 
+type PaginatedResult struct {
+	Total int64                  `json:"total"`
+	Data  []database.Opportunity `json:"data"`
+}
+
 func PullLatest() string {
 	// only pull data once a day
 	count := 1
@@ -129,12 +134,29 @@ func insertToDB(opportunityData []opportunities.OpportunityData) {
 	}
 }
 
-func Search(keyword string, filters OpportunityFilter) []database.Opportunity {
-	var result []database.Opportunity
+func Search(keyword string, filters OpportunityFilter) PaginatedResult {
+	var data []database.Opportunity
 	db := database.GetDbInstance()
 	// keywords
-	query := db.Where("notice_id LIKE ? OR title LIKE ? OR solicitation_number LIKE ? OR full_parent_path_name LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%")
-	query.Preload("PointOfContact").Preload("Links")
+	query := db.Debug().Preload("PointOfContact").Preload("Links")
+
+	if keyword != "" {
+		query.Where(
+			db.Where(
+				"notice_id LIKE ?",
+				"%"+keyword+"%",
+			).Or(
+				"title LIKE ?",
+				"%"+keyword+"%",
+			).Or(
+				"solicitation_number LIKE ?",
+				"%"+keyword+"%",
+			).Or(
+				"full_parent_path_name LIKE ?",
+				"%"+keyword+"%",
+			),
+		)
+	}
 
 	if filters.FromDate != "" {
 		query.Where("DATE(posted_date) >= ?", filters.FromDate)
@@ -143,10 +165,10 @@ func Search(keyword string, filters OpportunityFilter) []database.Opportunity {
 		query.Where("DATE(posted_date) <= ?", filters.ToDate)
 	}
 	if len(filters.Type) > 0 {
-		query.Where("type IN (?)", strings.Join(filters.Type, ","))
+		query.Where("type IN (?)", filters.Type)
 	}
 	if len(filters.NaicsCode) > 0 {
-		query.Where("naics_code IN (?)", strings.Join(filters.NaicsCode, ","))
+		query.Where("naics_code IN (?)", filters.NaicsCode)
 	}
 
 	if filters.Page > 0 && filters.PerPage > 0 {
@@ -154,14 +176,15 @@ func Search(keyword string, filters OpportunityFilter) []database.Opportunity {
 		query.Offset(int(offset)).Limit(int(filters.PerPage))
 	}
 
-	query.Order("posted_date desc").Find(&result)
+	query.Order("posted_date desc").Find(&data)
 
 	var count int64
 	query.Count(&count)
 
-	fmt.Printf("Total Results:%d", count)
-
-	return result
+	return PaginatedResult{
+		Total: count,
+		Data:  data,
+	}
 }
 
 func GetTypes() []string {

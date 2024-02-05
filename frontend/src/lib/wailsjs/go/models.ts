@@ -160,6 +160,38 @@ export namespace opportunity {
 	        this.perPage = source["perPage"];
 	    }
 	}
+	export class PaginatedResult {
+	    total: number;
+	    data: database.Opportunity[];
+	
+	    static createFrom(source: any = {}) {
+	        return new PaginatedResult(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.total = source["total"];
+	        this.data = this.convertValues(source["data"], database.Opportunity);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 
 }
 

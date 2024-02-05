@@ -11,12 +11,14 @@
     import Button from "$lib/components/button/Button.svelte";
     import Modal from "$lib/components/modal/Modal.svelte";
     import OpportunityDetails from "./OpportunityDetails.svelte";
-    import {opportunity} from "$lib/wailsjs/go/models";
+    import {database, opportunity} from "$lib/wailsjs/go/models";
     import OpportunityFilter = opportunity.OpportunityFilter;
     import {debounce} from "lodash";
     import Multiselect from "$lib/components/input/Multiselect.svelte";
+    import Opportunity = database.Opportunity;
 
-    let items: any[] = []
+    let items: Opportunity[] = []
+    let total: number = 0
     let isLoading: boolean = false
     let isPulling: boolean = false
     let search: string = ""
@@ -70,9 +72,10 @@
 
     const loadData = debounce(function (): void {
         isLoading = true
-        SearchOpportunities(search, filters)
+        SearchOpportunities(search, filters, false)
             .then((opportunitiesData) => {
-                items = opportunitiesData || []
+                items = opportunitiesData.data || []
+                total = opportunitiesData.total || 0
             })
             .finally(() => {
                 isLoading = false
@@ -110,6 +113,19 @@
         })
     }
 
+    function handleFilterChange() {
+        filters.page = 1
+        loadData()
+    }
+
+    function clearFilters(): void {
+        filters.fromDate = ""
+        filters.toDate = ""
+        filters.type = []
+        filters.naicsCode = []
+        filters.page = 1
+    }
+
     onMount(() => {
         loadData()
         loadOptions()
@@ -120,24 +136,28 @@
     <div class="row mb-3">
         <div class="col-12 col-sm-4 col-md-3 mb-2 mb-sm-0">
             <div class="input-group">
-                <input class="form-control" type="search" placeholder="Search" bind:value={search} on:input={loadData}>
+                <input class="form-control" type="search" placeholder="Search" bind:value={search} on:input={handleFilterChange}>
                 <span class="input-group-text">
-                    <i class="fas fa-search"></i>
+                    {#if isLoading}
+                        <i class="fas fa-spinner-third fa-spin"></i>
+                    {:else}
+                        <i class="fas fa-search"></i>
+                    {/if}
                 </span>
             </div>
         </div>
         {#if showFilter}
             <div class="col-2">
-                <input type="date" bind:value={filters.fromDate} class="form-control" placeholder="Posted From" on:input={loadData}>
+                <input type="date" bind:value={filters.fromDate} class="form-control" placeholder="Posted From" on:input={handleFilterChange}>
             </div>
             <div class="col-2">
-                <input type="date" bind:value={filters.toDate} class="form-control" placeholder="Posted To" on:input={loadData}>
+                <input type="date" bind:value={filters.toDate} class="form-control" placeholder="Posted To" on:input={handleFilterChange}>
             </div>
             <div class="col-2">
-                <Multiselect bind:value={filters.type} options="{opportunityTypes}" on:change={loadData} />
+                <Multiselect bind:value={filters.type} options="{opportunityTypes}" on:change={handleFilterChange} />
             </div>
             <div class="col-2">
-                <Multiselect bind:value={filters.naicsCode} options="{naicsCodes}" on:change={loadData} />
+                <Multiselect bind:value={filters.naicsCode} options="{naicsCodes}" on:change={handleFilterChange} />
             </div>
         {/if}
         <div class="col-12 col-sm-auto mx-auto">
@@ -158,17 +178,20 @@
         <div class="col-12 col-sm-auto flex-grow-0 mb-2 mb-sm-0">
             <Button on:click={downloadAsCsv} class="text-nowrap w-100">Export</Button>
         </div>
+        <div class="col-12 col-sm-auto flex-grow-0 mb-2 mb-sm-0">
+            <Button on:click={clearFilters} class="text-nowrap w-100">Clear Filter</Button>
+        </div>
     </div>
-    <DataTable items={items} headers={headers} bind:page={filters.page} bind:perPage={filters.perPage} bind:loading={isLoading} on:filter={loadData}>
+    <DataTable items={items} headers={headers} bind:page={filters.page} bind:perPage={filters.perPage} total="{total}" bind:loading={isLoading} on:filter={loadData}>
         <div slot="actions" let:row={row}>
             <Modal title="{row.title}">
                 <div slot="activator" class="text-center text-nowrap" let:show={show}>
-                    <a href="" on:click|preventDefault={show} >
+                    <a href="#show-info" on:click|preventDefault={show} >
                         <i class="fas fa-info-circle"></i>
                     </a>
                 </div>
                 <div slot="body">
-                    <OpportunityDetails opportunity="{row}"></OpportunityDetails>
+                    <OpportunityDetails opportunity="{row}" />
                 </div>
             </Modal>
         </div>
