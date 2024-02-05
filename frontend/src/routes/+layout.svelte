@@ -20,7 +20,10 @@
     </main>
 
     <footer>
-        App for everyone! AppDir: {cwd}
+        <p class="text-center">
+            App by <b>Pochie for Mochie</b>! @ All rights reserved <br>
+            AppDir: {cwd}
+        </p>
     </footer>
 </div>
 
