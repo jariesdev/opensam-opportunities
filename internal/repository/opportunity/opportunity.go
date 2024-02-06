@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gen2brain/beeep"
+	"gorm.io/gorm"
 	"open-gsa/internal/api/opportunities"
 	"open-gsa/internal/database"
 	"strconv"
@@ -136,54 +137,62 @@ func insertToDB(opportunityData []opportunities.OpportunityData) {
 
 func Search(keyword string, filters OpportunityFilter) PaginatedResult {
 	var data []database.Opportunity
-	db := database.GetDbInstance()
 	// keywords
-	query := db.Debug().Preload("PointOfContact").Preload("Links")
+	db := database.GetDbInstance()
 
-	if keyword != "" {
-		query.Where(
-			db.Where(
-				"notice_id LIKE ?",
-				"%"+keyword+"%",
-			).Or(
-				"title LIKE ?",
-				"%"+keyword+"%",
-			).Or(
-				"solicitation_number LIKE ?",
-				"%"+keyword+"%",
-			).Or(
-				"full_parent_path_name LIKE ?",
-				"%"+keyword+"%",
-			),
-		)
-	}
-
-	if filters.FromDate != "" {
-		query.Where("DATE(posted_date) >= ?", filters.FromDate)
-	}
-	if filters.ToDate != "" {
-		query.Where("DATE(posted_date) <= ?", filters.ToDate)
-	}
-	if len(filters.Type) > 0 {
-		query.Where("type IN (?)", filters.Type)
-	}
-	if len(filters.NaicsCode) > 0 {
-		query.Where("naics_code IN (?)", filters.NaicsCode)
-	}
-
+	tx := db.Debug().Session(&gorm.Session{NewDB: true}).Preload("PointOfContact").Preload("Links").Scopes(PaginatedSearch(keyword, filters))
 	if filters.Page > 0 && filters.PerPage > 0 {
 		offset := (filters.Page - 1) * filters.PerPage
-		query.Offset(int(offset)).Limit(int(filters.PerPage))
+		tx.Offset(int(offset)).Limit(int(filters.PerPage))
 	}
+	tx.Order("posted_date desc")
+	tx.Find(&data)
 
-	query.Order("posted_date desc").Find(&data)
-
-	var count int64
-	query.Count(&count)
+	count := int64(0)
+	db.Debug().Session(&gorm.Session{NewDB: true}).Model(&database.Opportunity{}).Scopes(PaginatedSearch(keyword, filters)).Count(&count)
+	fmt.Printf("Result count: %d %d", count, tx.RowsAffected)
 
 	return PaginatedResult{
 		Total: count,
 		Data:  data,
+	}
+}
+
+func PaginatedSearch(keyword string, filter OpportunityFilter) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		// keywords
+		if keyword != "" {
+			db.Where(
+				db.Where(
+					"notice_id LIKE ?",
+					"%"+keyword+"%",
+				).Or(
+					"title LIKE ?",
+					"%"+keyword+"%",
+				).Or(
+					"solicitation_number LIKE ?",
+					"%"+keyword+"%",
+				).Or(
+					"full_parent_path_name LIKE ?",
+					"%"+keyword+"%",
+				),
+			)
+		}
+
+		if filter.FromDate != "" {
+			db.Where("DATE(posted_date) >= ?", filter.FromDate)
+		}
+		if filter.ToDate != "" {
+			db.Where("DATE(posted_date) <= ?", filter.ToDate)
+		}
+		if len(filter.Type) > 0 {
+			db.Where("type IN (?)", filter.Type)
+		}
+		if len(filter.NaicsCode) > 0 {
+			db.Where("naics_code IN (?)", filter.NaicsCode)
+		}
+
+		return db
 	}
 }
 
