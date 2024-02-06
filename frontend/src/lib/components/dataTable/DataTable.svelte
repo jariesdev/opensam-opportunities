@@ -73,7 +73,7 @@
                 Compact View
             </label>
         </div>
-        <div class="col-1">
+        <div class="col-2">
             <select class="form-control" bind:value={perPage} on:change={handleFilterChange}>
                 {#each perPageOptions as option}
                     <option value="{option}">{option} per page</option>

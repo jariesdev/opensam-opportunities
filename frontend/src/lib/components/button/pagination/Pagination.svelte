@@ -42,6 +42,11 @@
 <nav aria-label="Pagination">
     <ul class="pagination mb-0">
         <li class="page-item">
+            <a class="page-link" class:disabled={value === 1} href="#first" on:click="{() => setCurrentPage(1)}">
+                <i class="fas fa-angle-double-left"></i>
+            </a>
+        </li>
+        <li class="page-item">
             <a class="page-link" class:disabled={value === 1} href="#previous" on:click="{() => setCurrentPage(value - (value > 1 ? 1 : 0))}">
                 <i class="fas fa-angle-left"></i>
             </a>
@@ -56,6 +61,11 @@
         <li class="page-item">
             <a class="page-link" class:disabled={value === numberOfPages()} href="#next" on:click="{() => setCurrentPage(value + (value < numberOfPages() ? 1 : 0))}">
                 <i class="fas fa-angle-right"></i>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" class:disabled={value === numberOfPages()} href="#last" on:click="{() => setCurrentPage(numberOfPages())}">
+                <i class="fas fa-angle-double-right"></i>
             </a>
         </li>
     </ul>

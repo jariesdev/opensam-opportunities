@@ -147,20 +147,20 @@
             </div>
         </div>
         {#if showFilter}
-            <div class="col-2">
+            <div class="col-12 col-sm-2 mb-2 mb-sm-0">
                 <input type="date" bind:value={filters.fromDate} class="form-control" placeholder="Posted From" on:input={handleFilterChange}>
             </div>
-            <div class="col-2">
+            <div class="col-12 col-sm-2 mb-2 mb-sm-0">
                 <input type="date" bind:value={filters.toDate} class="form-control" placeholder="Posted To" on:input={handleFilterChange}>
             </div>
-            <div class="col-2">
+            <div class="col-12 col-sm-2 mb-2 mb-sm-0">
                 <Multiselect bind:value={filters.type} options="{opportunityTypes}" on:change={handleFilterChange} />
             </div>
-            <div class="col-2">
+            <div class="col-12 col-sm-2 mb-2 mb-sm-0">
                 <Multiselect bind:value={filters.naicsCode} options="{naicsCodes}" on:change={handleFilterChange} />
             </div>
         {/if}
-        <div class="col-12 col-sm-auto mx-auto">
+        <div class="col-12 {!showFilter ? 'col-sm-auto mx-auto' : ' mb-3'}">
 
         </div>
         <div class="col-12 col-sm-auto flex-grow-0 mb-2 mb-sm-0">
