@@ -5,5 +5,5 @@ export const ssr: boolean = false
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ route,data }) {
-    console.log('main layout:', route, data);
+    console.log('auth layout:', route, data);
 }
