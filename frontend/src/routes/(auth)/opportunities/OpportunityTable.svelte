@@ -147,16 +147,16 @@
             </div>
         </div>
         {#if showFilter}
-            <div class="col-12 col-sm-2 mb-2 mb-sm-0">
+            <div class="col-12 col-sm-3 col-md-2 mb-2 mb-sm-0">
                 <input type="date" bind:value={filters.fromDate} class="form-control" placeholder="Posted From" on:input={handleFilterChange}>
             </div>
-            <div class="col-12 col-sm-2 mb-2 mb-sm-0">
+            <div class="col-12 col-sm-3 col-md-2 mb-2 mb-sm-0">
                 <input type="date" bind:value={filters.toDate} class="form-control" placeholder="Posted To" on:input={handleFilterChange}>
             </div>
-            <div class="col-12 col-sm-2 mb-2 mb-sm-0">
+            <div class="col-12 col-sm-3 col-md-2 mb-2 mb-sm-0">
                 <Multiselect bind:value={filters.type} options="{opportunityTypes}" on:change={handleFilterChange} />
             </div>
-            <div class="col-12 col-sm-2 mb-2 mb-sm-0">
+            <div class="col-12 col-sm-3 col-md-2 mb-2 mb-sm-0">
                 <Multiselect bind:value={filters.naicsCode} options="{naicsCodes}" on:change={handleFilterChange} />
             </div>
         {/if}
@@ -178,9 +178,11 @@
         <div class="col-12 col-sm-auto flex-grow-0 mb-2 mb-sm-0">
             <Button on:click={downloadAsCsv} class="text-nowrap w-100">Export</Button>
         </div>
-        <div class="col-12 col-sm-auto flex-grow-0 mb-2 mb-sm-0">
-            <Button on:click={clearFilters} class="text-nowrap w-100">Clear Filter</Button>
-        </div>
+        {#if showFilter}
+            <div class="col-12 col-sm-auto flex-grow-0 mb-2 mb-sm-0">
+                <Button on:click={clearFilters} class="text-nowrap w-100">Clear Filter</Button>
+            </div>
+        {/if}
     </div>
     <DataTable items={items} headers={headers} bind:page={filters.page} bind:perPage={filters.perPage} total="{total}" bind:loading={isLoading} on:filter={loadData}>
         <div slot="actions" let:row={row}>

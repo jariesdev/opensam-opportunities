@@ -64,16 +64,16 @@
     </div>
     <div class="row mt-3 ">
         <div class="col-2 align-self-center">
-            <span class="fst-italic">{total} total records</span>
+            <span class="fst-italic text-nowrap">{total} records</span>
         </div>
         <div class="col mx-auto"></div>
-        <div class="col flex-grow-0 text-nowrap align-self-center">
+        <div class="col flex-grow-0 text-nowrap align-self-center d-none d-md-block">
             <label class="form-check">
                 <input type="checkbox" bind:checked="{wordWrap}" class="form-check-input">
                 Compact View
             </label>
         </div>
-        <div class="col-2">
+        <div class="col-2 d-none d-md-block">
             <select class="form-control" bind:value={perPage} on:change={handleFilterChange}>
                 {#each perPageOptions as option}
                     <option value="{option}">{option} per page</option>

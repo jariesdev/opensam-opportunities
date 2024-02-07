@@ -70,7 +70,7 @@
                 </button>
             {/each}
         </div>
-        <div class="m-dropdown-menu z-2 position-absolute bg-white w-100 rounded-2 shadow rounded-bottom overflow-hidden pb-1 fade {showDropdown ? 'show d-block' : 'd-none'}">
+        <div class="m-dropdown-menu z-10 position-absolute bg-white w-100 rounded-2 shadow rounded-bottom overflow-hidden pb-1 fade {showDropdown ? 'show d-block' : 'd-none'}">
             <div class="filter-input">
                 <input bind:value="{searchInput}" type="search" class="form-control-plaintext px-2" placeholder="search">
             </div>
