@@ -7,9 +7,3 @@ export const csr: boolean = dev;
 // since there's no dynamic data here, we can prerender
 // it so that it gets served as a static asset in production
 export const prerender: boolean = true;
-
-
-/** @type {import('../../../../.svelte-kit/types/src/routes').PageLoad} */
-export async function load({ route,data }) {
-    console.log(route, data);
-}

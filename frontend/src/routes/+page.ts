@@ -12,11 +12,9 @@ export async function load(pageEvent: PageLoadEvent): Promise<void> {
     const u: string | null = localStorage.getItem('auth_user')
     user = !!u ? JSON.parse(u) : null
 
-    if (pageEvent.route.id === '/') {
-        if (user !== null && !!user.username) {
-            redirect(302, "/opportunities")
-        } else {
-            redirect(302, "/login")
-        }
+    if (user !== null && !!user.username) {
+        redirect(302, "/opportunities")
+    } else {
+        redirect(302, "/login")
     }
 }
