@@ -8,10 +8,10 @@ export const ssr: boolean = false
 /** @type {import('./$types').PageLoad} */
 export async function load(): Promise<void> {
     let user:User|null
-    const u: string|null = localStorage.getItem('auth_user')
+    const u:string|null = localStorage.getItem('auth_user')
     user = !!u ? JSON.parse(u) : null
 
-    if(user === null) {
-        redirect(302, "/login")
+    if(user !== null && !!user.username) {
+        redirect(302, "/opportunities")
     }
 }

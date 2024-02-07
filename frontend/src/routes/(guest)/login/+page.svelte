@@ -1,12 +1,13 @@
 <script lang="ts">
-    import logo from '.././assets/images/logo.png'
+    import logo from '../../../assets/images/logo.png'
     import LoginForm from "$lib/components/LoginForm.svelte";
     import { goto } from '$app/navigation'
+    import type {User} from "$lib/types/user";
 
     let message: string = "Please enter your credentials 👇"
     let wasFailed: boolean = false
 
-    function handleSuccess({detail: {isSuccess}}: CustomEvent): void {
+    function handleSuccess({detail: {isSuccess,username}}: CustomEvent): void {
 
         if (!isSuccess) {
             message = 'Invalid username or password!'
@@ -14,6 +15,11 @@
             return
         }
 
+        const user: User = {
+            username: username
+        }
+
+        localStorage.setItem('auth_user', JSON.stringify(user))
         wasFailed = false
         goto('/opportunities')
     }

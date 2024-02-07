@@ -19,7 +19,7 @@
                 isSuccess = result
                 resultText = message
 
-                dispatch('success', {isSuccess,resultText})
+                dispatch('success', {isSuccess,resultText,username})
             })
             .finally(() => {
                 isProcessing = false
