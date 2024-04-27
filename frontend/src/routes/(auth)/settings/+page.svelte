@@ -1,5 +1,4 @@
 <script lang="ts">
-	import OpportunityTable from "./OpportunityTable.svelte";
 	import {goto} from "$app/navigation";
 	import NavBar from "$lib/components/NavBar.svelte";
 
@@ -13,12 +12,12 @@
 </script>
 
 <svelte:head>
-	<title>Opportunities</title>
+	<title>Settings</title>
 </svelte:head>
 
-<NavBar title="Opportunities"></NavBar>
+<NavBar title="Settings"></NavBar>
 <div class="text-column">
 	<div class="container-fluid">
-		<OpportunityTable></OpportunityTable>
+
 	</div>
 </div>
