@@ -205,9 +205,20 @@ func (a *App) UpdateSettings(settings []SettingRequest) SettingResponse {
 		}
 	}
 
-	err := beeep.Alert("OpenGsaApp", "System setting updated.", "static/favicon.png")
-	if err != nil {
-		log.Fatal(err)
+	_, err1 := runtime.MessageDialog(
+		a.ctx,
+		runtime.MessageDialogOptions{
+			Title:   "Update settings",
+			Message: "System setting updated",
+		},
+	)
+	if err1 != nil {
+		log.Fatal(err1)
+	}
+
+	err2 := beeep.Alert("OpenGsaApp", "System setting updated.", "static/favicon.png")
+	if err2 != nil {
+		log.Fatal(err2)
 	}
 
 	return SettingResponse{Message: "Settings updated.", Result: true}
