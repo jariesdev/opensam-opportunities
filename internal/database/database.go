@@ -66,8 +66,8 @@ type User struct {
 
 type Setting struct {
 	gorm.Model
-	Key   string
-	Value string
+	Key   string `json:"key"`
+	Value string `json:"value"`
 }
 
 func GetDbInstance() *gorm.DB {

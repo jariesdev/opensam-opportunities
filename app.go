@@ -8,6 +8,7 @@ import (
 	"log"
 	"open-gsa/internal/database"
 	opportunityRepo "open-gsa/internal/repository/opportunity"
+	"open-gsa/internal/repository/setting"
 	"os"
 	"path/filepath"
 	"strings"
@@ -19,6 +20,16 @@ type App struct {
 }
 
 type LoginResponse struct {
+	Message string `json:"message"`
+	Result  bool   `json:"result"`
+}
+
+type SettingRequest struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+type SettingResponse struct {
 	Message string `json:"message"`
 	Result  bool   `json:"result"`
 }
@@ -157,4 +168,30 @@ func (a *App) GetOpportunityTypes() []string {
 
 func (a *App) GetOpportunityNaicsCodes() []string {
 	return opportunityRepo.GetNaicsCodes()
+}
+
+func (a *App) GetAllSettings() []database.Setting {
+	return setting.AllSettings()
+}
+
+func (a *App) GetSystemStatus() setting.SystemState {
+	return setting.SystemStatus()
+}
+
+func (a *App) UpdateSettings(settings []SettingRequest) SettingResponse {
+	db := database.GetDbInstance()
+
+	for i := 0; i < len(settings); i++ {
+		rSetting := settings[i]
+
+		settingModel := database.Setting{Value: rSetting.Value}
+		result := db.FirstOrCreate(&settingModel, database.Setting{Key: rSetting.Key})
+
+		if result.RowsAffected == 0 {
+			settingModel.Value = rSetting.Value
+			db.Save(&settingModel)
+		}
+	}
+
+	return SettingResponse{Message: "Settings updated.", Result: true}
 }

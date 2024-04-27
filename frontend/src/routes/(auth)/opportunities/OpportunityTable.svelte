@@ -154,10 +154,10 @@
                 <input type="date" bind:value={filters.toDate} class="form-control" placeholder="Posted To" on:input={handleFilterChange}>
             </div>
             <div class="col-12 col-sm-3 col-md-2 mb-2 mb-sm-0">
-                <Multiselect bind:value={filters.type} options="{opportunityTypes}" on:change={handleFilterChange} />
+                <Multiselect bind:value={filters.type} options="{opportunityTypes}" placeholder="Filter type" on:change={handleFilterChange} />
             </div>
             <div class="col-12 col-sm-3 col-md-2 mb-2 mb-sm-0">
-                <Multiselect bind:value={filters.naicsCode} options="{naicsCodes}" on:change={handleFilterChange} />
+                <Multiselect bind:value={filters.naicsCode} options="{naicsCodes}" placeholder="Filter code" on:change={handleFilterChange} />
             </div>
         {/if}
         <div class="col-12 {!showFilter ? 'col-sm-auto mx-auto' : ' mb-3'}">

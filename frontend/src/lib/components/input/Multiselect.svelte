@@ -5,6 +5,7 @@
 
     export let value: string[] = []
     export let options: any[] = []
+    export let placeholder: string = "select type"
     let showDropdown: boolean = false
     let searchInput: string = ""
     const dispatcher = createEventDispatcher()
@@ -57,7 +58,7 @@
         <div class="selected-options form-control grid" role="button" tabindex="0" on:click={toggleDropdown}>
             {#if selectionOptions().length === 0}
                 <div class="btn border-0 btn-sm disabled py-0">
-                    Select type
+                    {placeholder}
                 </div>
             {/if}
             {#each selectionOptions() as option}

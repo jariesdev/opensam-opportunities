@@ -114,6 +114,21 @@ export namespace database {
 		    return a;
 		}
 	}
+	
+	export class Setting {
+	    key: string;
+	    value: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Setting(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.key = source["key"];
+	        this.value = source["value"];
+	    }
+	}
 
 }
 
@@ -125,6 +140,34 @@ export namespace main {
 	
 	    static createFrom(source: any = {}) {
 	        return new LoginResponse(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.message = source["message"];
+	        this.result = source["result"];
+	    }
+	}
+	export class SettingRequest {
+	    key: string;
+	    value: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new SettingRequest(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.key = source["key"];
+	        this.value = source["value"];
+	    }
+	}
+	export class SettingResponse {
+	    message: string;
+	    result: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new SettingResponse(source);
 	    }
 	
 	    constructor(source: any = {}) {
@@ -191,6 +234,23 @@ export namespace opportunity {
 		    }
 		    return a;
 		}
+	}
+
+}
+
+export namespace setting {
+	
+	export class SystemState {
+	    lastPull: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new SystemState(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.lastPull = source["lastPull"];
+	    }
 	}
 
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"open-gsa/internal/database"
 	"os"
 	"time"
 )
@@ -154,7 +155,6 @@ func GetOpportunities(dateFrom string, dateTo string, ptype string) SearchResult
 
 	var url string
 	result := SearchResult{}
-	//apiKey := "PqJ4mFnwiHJwoIUEgKVrmI1Mw2d2yENklw6UJues"
 	apiKey := getApiKey()
 	limit := 1000
 	url = fmt.Sprintf(getBaseUrl()+"/opportunities/v2/search?api_key=%s&limit=%d", apiKey, limit)
@@ -170,7 +170,6 @@ func GetOpportunities(dateFrom string, dateTo string, ptype string) SearchResult
 	}
 	//url = "https://api.sam.gov/prod/opportunities/v2/search?api_key={{apiKey}}&limit=1000&postedFrom=12/01/2023&postedTo=12/07/2023"
 	fmt.Printf("Request to URL: %s \n ", url)
-	//return SearchResult{}
 	err := getJson(url, &result)
 	if err != nil {
 		log.Fatal(err)
@@ -185,11 +184,14 @@ func getBaseUrl() string {
 	return "https://api.sam.gov"
 }
 func getApiKey() string {
-	//envFile, _ := godotenv.Read(".env")
-	//return "3XASl0fa2aW5gvsMZQdbgqNDp3QPEJ8XnSsPmEFA"
-	//return "8vZZYVauOCfEjrPbWlE6hgbUNvK9BLE1O5vm5axq"
-	// prod
-	return "PqJ4mFnwiHJwoIUEgKVrmI1Mw2d2yENklw6UJues"
+	settingModel := database.Setting{}
+	db := database.GetDbInstance()
+	result := db.Model(&database.Setting{}).First(&settingModel, "key = ?", "api_key")
+	if result.RowsAffected > 0 {
+		return settingModel.Value
+	}
+
+	return ""
 }
 
 func exampleResponse() SearchResult {
