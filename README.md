@@ -2,7 +2,7 @@
 
 ## About
 
-This is a desktop app that pulls and consolidates [OpenSa](https://open.gsa.gov/) opportunities. It can generate CSV reports, search and filter records.
+This is a desktop app that pulls and consolidates [open.gsa.gov](https://open.gsa.gov/) opportunities. It can generate CSV reports, search and filter records.
 
 ## Live Development
 
