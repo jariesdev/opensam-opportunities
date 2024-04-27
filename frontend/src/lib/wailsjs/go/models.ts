@@ -148,6 +148,20 @@ export namespace main {
 	        this.result = source["result"];
 	    }
 	}
+	export class Response {
+	    message: string;
+	    success: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new Response(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.message = source["message"];
+	        this.success = source["success"];
+	    }
+	}
 	export class SettingRequest {
 	    key: string;
 	    value: string;

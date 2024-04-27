@@ -19,7 +19,7 @@ export function Greet(arg1:string):Promise<string>;
 
 export function Login(arg1:string,arg2:string):Promise<main.LoginResponse>;
 
-export function PullLatest():Promise<void>;
+export function PullLatest():Promise<main.Response>;
 
 export function SearchOpportunities(arg1:string,arg2:opportunity.OpportunityFilter,arg3:boolean):Promise<opportunity.PaginatedResult>;
 

@@ -2,6 +2,7 @@ package opportunity
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gen2brain/beeep"
 	"gorm.io/gorm"
@@ -26,7 +27,7 @@ type PaginatedResult struct {
 	Data  []database.Opportunity `json:"data"`
 }
 
-func PullLatest() string {
+func PullLatest() (string, error) {
 	// only pull data once a day
 	count := 1
 	lastPull := database.Setting{}
@@ -44,11 +45,19 @@ func PullLatest() string {
 			fmt.Printf("Exceeded daily pull")
 		}
 
-		fmt.Printf("Daily Pull Count: %d", count)
+		fmt.Printf("Daily Pull Count: %d \n", count)
 
 		from := time.Now().AddDate(0, 0, -7).Format("01/02/2006")
 		to := time.Now().Format("01/02/2006")
-		result := opportunities.GetOpportunities(from, to, ptype)
+		result, err := opportunities.GetOpportunities(from, to, ptype)
+		if err != nil {
+			errorMessage := fmt.Sprintf("failed pulling new items. %s", err.Error())
+			err := beeep.Alert("OpenGsaApp", errorMessage, "static/favicon.png")
+			if err != nil {
+				panic(err)
+			}
+			return "", errors.New(errorMessage)
+		}
 
 		totalItems += result.TotalRecords
 
@@ -67,7 +76,7 @@ func PullLatest() string {
 		panic(err)
 	}
 
-	return fmt.Sprintf("Pulled %d items \n", totalItems)
+	return fmt.Sprintf("Pulled %d items \n", totalItems), nil
 }
 
 // insert if not exists or update if exists based on notice ID

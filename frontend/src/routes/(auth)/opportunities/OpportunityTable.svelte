@@ -11,7 +11,7 @@
     import Button from "$lib/components/button/Button.svelte";
     import Modal from "$lib/components/modal/Modal.svelte";
     import OpportunityDetails from "./OpportunityDetails.svelte";
-    import {database, opportunity} from "$lib/wailsjs/go/models";
+    import {database, main, opportunity} from "$lib/wailsjs/go/models";
     import OpportunityFilter = opportunity.OpportunityFilter;
     import {debounce} from "lodash";
     import Multiselect from "$lib/components/input/Multiselect.svelte";
@@ -85,7 +85,10 @@
     const pullLatest = debounce(function (): void {
         isPulling = true
         PullLatest()
-            .then(() => {
+            .then((response: main.Response) => {
+                if(!response.success) {
+                    throw new Error(response.message)
+                }
                 loadData()
             })
             .finally(() => {

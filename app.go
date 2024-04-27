@@ -19,6 +19,11 @@ type App struct {
 	ctx context.Context
 }
 
+type Response struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
+}
+
 type LoginResponse struct {
 	Message string `json:"message"`
 	Result  bool   `json:"result"`
@@ -94,8 +99,14 @@ func (a *App) SearchOpportunities(keyword string, filters opportunityRepo.Opport
 	return result
 }
 
-func (a *App) PullLatest() {
-	opportunityRepo.PullLatest()
+func (a *App) PullLatest() Response {
+	msg, err := opportunityRepo.PullLatest()
+	success := true
+	if err != nil {
+		msg = err.Error()
+		success = false
+	}
+	return Response{Message: msg, Success: success}
 }
 
 func downloadReport(data []database.Opportunity, filename string) {

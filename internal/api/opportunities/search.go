@@ -2,8 +2,8 @@ package opportunities
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"open-gsa/internal/database"
 	"os"
@@ -122,6 +122,12 @@ func getJson(url string, target interface{}) error {
 	}
 	defer r.Body.Close()
 
+	if r.StatusCode >= 401 && r.StatusCode <= 403 {
+		return errors.New(fmt.Sprintf("%d error. Verify api key if still valid.", r.StatusCode))
+	} else if r.StatusCode > 299 {
+		return errors.New(fmt.Sprintf("%d error", r.StatusCode))
+	}
+
 	return json.NewDecoder(r.Body).Decode(target)
 }
 
@@ -150,7 +156,7 @@ func getJson(url string, target interface{}) error {
 //	fmt.Print(body)
 //}
 
-func GetOpportunities(dateFrom string, dateTo string, ptype string) SearchResult {
+func GetOpportunities(dateFrom string, dateTo string, ptype string) (SearchResult, error) {
 	//return exampleResponse()
 
 	var url string
@@ -172,10 +178,10 @@ func GetOpportunities(dateFrom string, dateTo string, ptype string) SearchResult
 	fmt.Printf("Request to URL: %s \n ", url)
 	err := getJson(url, &result)
 	if err != nil {
-		log.Fatal(err)
+		return result, err
 	}
 
-	return result
+	return result, err
 }
 
 func getBaseUrl() string {
