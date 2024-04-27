@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/csv"
 	"fmt"
+	"github.com/gen2brain/beeep"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"log"
 	"open-gsa/internal/database"
@@ -202,6 +203,11 @@ func (a *App) UpdateSettings(settings []SettingRequest) SettingResponse {
 			settingModel.Value = rSetting.Value
 			db.Save(&settingModel)
 		}
+	}
+
+	err := beeep.Alert("OpenGsaApp", "System setting updated.", "static/favicon.png")
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	return SettingResponse{Message: "Settings updated.", Result: true}
