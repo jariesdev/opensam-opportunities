@@ -18,6 +18,15 @@ type SearchResult struct {
 	Links             []ResultLink      `json:"links"`
 }
 
+type ErrorMessage struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+type ErrorResponse struct {
+	Error ErrorMessage `json:"error"`
+}
+
 type OpportunityData struct {
 	NoticeID                  string             `json:"noticeId"`
 	Title                     string             `json:"title"`
@@ -122,10 +131,13 @@ func getJson(url string, target interface{}) error {
 	}
 	defer r.Body.Close()
 
-	if r.StatusCode >= 401 && r.StatusCode <= 403 {
-		return errors.New(fmt.Sprintf("%d error. Verify api key if still valid.", r.StatusCode))
-	} else if r.StatusCode > 299 {
-		return errors.New(fmt.Sprintf("%d error", r.StatusCode))
+	if r.StatusCode > 299 {
+		errorResponse := ErrorResponse{}
+		err := json.NewDecoder(r.Body).Decode(&errorResponse)
+		if err != nil {
+			return err
+		}
+		return errors.New(fmt.Sprintf("%d, %s", r.StatusCode, errorResponse.Error.Message))
 	}
 
 	return json.NewDecoder(r.Body).Decode(target)
