@@ -66,7 +66,7 @@
 
 <section>
     <div class="row">
-        <div class="col-sm-5">
+        <div class="col-12 col-md-6">
             <form method="POST" on:submit|preventDefault={updateSettings}>
                 <div class="input-box mb-4" id="input">
                     <label for="apiKey" class="block text-gray-700 text-sm font-bold mb-2">
@@ -76,7 +76,7 @@
                            bind:value={apiKey}
                            class="form-control mb-3"
                            id="apiKey"
-                           type="text"
+                           type="password"
                            placeholder="Enter api key"/>
                 </div>
 
