@@ -2,7 +2,7 @@
 
 ## About
 
-This is the official Wails Svelte template.
+This is a desktop app that pulls and consolidates [open.gsa.gov](https://open.gsa.gov/) opportunities. It can generate CSV reports, search and filter records.
 
 ## Live Development
 
